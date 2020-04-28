@@ -1,0 +1,42 @@
+@import '../../_variables.scss';
+
+@mixin labelUp {
+    top: -14px;
+    font-size: 12px;
+    color: #696969;
+}
+
+.group {
+    position: relative;
+    margin: 45px 0;
+    font-family: 'Dosis';
+    .form-input {
+        background: none;
+        color: #000000;
+        font-size: 20px;
+        padding: 10px 10px 10px 5px;
+        display: block;
+        width: 390px;
+        border: none;
+        border-bottom: 1px solid map_get($colors, "dark");
+        margin: 25px 0;
+        &:focus {
+            outline: none;
+        }
+        &:focus ~ .form-input-label {
+            @include labelUp();
+        }
+    }
+    .form-input-label {
+        color: #000000;
+        font-size: 19px;
+        position: absolute;
+        pointer-events: none;
+        left: 5px;
+        top: 10px;
+        transition: 250ms ease all;
+        &.shrink {
+            @include labelUp();
+        }
+    }
+}

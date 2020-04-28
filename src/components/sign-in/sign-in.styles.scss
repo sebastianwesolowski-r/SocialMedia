@@ -1,0 +1,25 @@
+.sign-in-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Roboto';
+    margin-top: 100px;
+    .page-title {
+        font-size: 27px;
+        margin-bottom: 30px;
+    }
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+    .switch-sign-up {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 18px;
+        margin-top: 80px;
+        .space {
+            margin-bottom: 20px;
+        }
+    }
+}

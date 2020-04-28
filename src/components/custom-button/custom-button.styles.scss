@@ -1,0 +1,28 @@
+@import '../../_variables.scss';
+
+.custom-button {
+    min-width: 145px;
+    width: auto;
+    height: 35px;
+    font-size: 20px;
+    font-family: 'Roboto';
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: map_get($colors, "dark");
+    color: map_get($colors, "light");
+    border: none;
+    cursor: pointer;
+    &.google-sign-in {
+        background-color: #4285f4;
+    }
+    &:hover {
+        background-color: map_get($colors, "light");
+        color: map_get($colors, "dark");
+        border: 1px solid map_get($colors, "dark");
+        svg {
+            filter: brightness(0);
+        }
+    }
+}
