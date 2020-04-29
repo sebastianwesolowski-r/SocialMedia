@@ -1,0 +1,27 @@
+.SpinnerOverlay {
+    height: 65%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .SpinnerContainer {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        border: 1px solid #ffffff;
+        border-radius: 50%;
+        border-top-color: #000000;
+        animation: spin 1s ease-in-out infinite;
+        -webkit-animation: spin 1s ease-in-out infinite;
+        @keyframes spin {
+            to {
+            -webkit-transform: rotate(360deg);
+            }
+        }
+        @-webkit-keyframes spin {
+            to {
+            -webkit-transform: rotate(360deg);
+            }
+        }
+    }
+}

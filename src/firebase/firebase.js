@@ -13,7 +13,7 @@ export const googleProvider = new firebase.auth.GoogleAuthProvider();
 googleProvider.setCustomParameters({prompt: 'select_account'});
 export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
-export const CreateUserProfile = async(userAuth, additionalData) => {
+export const createUserProfile = async(userAuth, additionalData) => {
     if(!userAuth) return;
 
     const userRef = firestore.doc(`users/${userAuth.uid}`);

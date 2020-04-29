@@ -1,12 +1,18 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import {createStructuredSelector} from 'reselect';
+
+import {signUpStart} from '../../redux/user/user.actions';
+import {selectIsProcessing} from '../../redux/user/user.selectors';
 
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
 import {ReactComponent as Enter} from '../../assets/enter.svg';
+import Spinner from '../spinner/spinner.component';
 
 import './sign-up.styles.scss';
 
-const SignUp = ({doesUserHaveAnAccount}) => {
+const SignUp = ({doesUserHaveAnAccount, signUpStart, isProcessing}) => {
     const [userData, setUserData] = useState({displayName: '', email: '', password: '', confirmPassword: ''});
     const {displayName ,email, password, confirmPassword} = userData;
 
@@ -21,6 +27,7 @@ const SignUp = ({doesUserHaveAnAccount}) => {
             alert("Passwords didn't match");
             return;
         }
+        signUpStart({displayName, email, password});
     }
 
     return (
@@ -33,7 +40,13 @@ const SignUp = ({doesUserHaveAnAccount}) => {
                 <FormInput name="confirmPassword" type="password" label="Confirm Password" value={confirmPassword} onChange={handleChange} required/>
                 <div className="buttons">
                     <CustomButton type="submit">
-                        <Enter />
+                        {
+                            isProcessing ? (
+                                <Spinner />
+                            ) : (
+                                <Enter />
+                            )
+                        }
                     </CustomButton>
                 </div>
             </form>
@@ -46,4 +59,12 @@ const SignUp = ({doesUserHaveAnAccount}) => {
     );
 };
 
-export default SignUp;
+const mapStateToProps = createStructuredSelector({
+    isProcessing: selectIsProcessing
+});
+
+const mapDispatchToProps = dispatch => ({
+    signUpStart: userData => dispatch(signUpStart(userData))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
