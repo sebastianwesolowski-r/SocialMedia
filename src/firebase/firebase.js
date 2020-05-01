@@ -18,7 +18,7 @@ export const createUserProfile = async(userAuth, additionalData) => {
 
     const userRef = firestore.doc(`users/${userAuth.uid}`);
     const userSnapshot = await userRef.get();
-    if (!userSnapshot.exist) {
+    if (!userSnapshot.exists) {
         const {displayName, email} = userAuth;
         const createdAt = new Date();
         const followers = [];
@@ -46,6 +46,23 @@ export const getCurrentUser = () => {
             resolve(userAuth);
         }, reject);
     });
+};
+
+export const convertUsersSnapshotToMap = users => {
+    const transformedUsers = users.docs.map(doc => {
+        const {displayName, followers, following} = doc.data();
+        return {
+            routeName: encodeURI(displayName.toLowerCase()),
+            id: doc.id,
+            displayName,
+            followers,
+            following
+        };
+    });
+    return transformedUsers.reduce((accumulator, user) => {
+        accumulator[user.displayName.toLowerCase()] = user;
+        return accumulator;
+    }, {});
 };
 
 export default firebase;

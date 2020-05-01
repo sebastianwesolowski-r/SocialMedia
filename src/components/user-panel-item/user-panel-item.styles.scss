@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Dosis:500&display=swap');
+@import '../../_variables.scss';
+
+a {
+    text-decoration: none;
+    color: unset;
+}
+
+.user-panel-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 125px;
+    height: 25px;
+    font-family: 'Dosis';
+    font-weight: 500;
+    font-size: 18px;
+    color: map_get($colors, "light");
+    padding: 0 10px;
+    border: 1px solid map_get($colors, "light");
+    transition-duration: 100ms;
+    cursor: pointer;
+    &:hover {
+        border-color: #A4A4A4;
+    }
+    .icon {
+        padding-top: 2px;
+    }
+}

@@ -10,6 +10,7 @@ import Header from './components/header/header.component';
 
 import LandingPage from './pages/landing-page/landing-page.component';
 import FeedPage from './pages/feed-page/feed-page.component';
+import ProfilePage from './pages/profile-page/profile-page.component';
 
 import './App.css';
 
@@ -28,12 +29,8 @@ function App({currentUser, checkUserSession}) {
             <LandingPage />
           )
         } />
-        <Route path="/feed" render={() => currentUser ? (
-            <FeedPage />
-          ) : (
-            <Redirect to="/" />
-          )
-        }/>
+        <Route path="/feed" component={FeedPage} />
+        <Route path="/profile" component={ProfilePage} />
       </Switch>
     </div>
   );
