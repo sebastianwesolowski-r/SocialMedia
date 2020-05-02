@@ -1,10 +1,15 @@
 .search-user-item {
     width: 240px;
     height: 40px;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 15px;
     font-family: 'Roboto';
     border-bottom: 1px solid;
+    a {
+        text-decoration: none;
+        color: unset;
+    }
 }

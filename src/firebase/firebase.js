@@ -60,7 +60,7 @@ export const convertUsersSnapshotToMap = users => {
         };
     });
     return transformedUsers.reduce((accumulator, user) => {
-        accumulator[user.displayName.toLowerCase()] = user;
+        accumulator[user.displayName] = user;
         return accumulator;
     }, {});
 };
