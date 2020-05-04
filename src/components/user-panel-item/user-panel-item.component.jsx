@@ -14,7 +14,7 @@ const UserPanelItem = ({url, panelFunction, icon, onClickFunction}) => {
         <div>
         {
             url ? (
-                <Link to={`/feed/${url}`}>
+                <Link to={url}>
                     {item}
                 </Link>
             ) : (

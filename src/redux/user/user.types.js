@@ -10,7 +10,9 @@ const UserActionTypes = {
     SIGN_UP_START: 'SIGN_UP_START',
     SIGN_UP_SUCCESS: 'SIGN_UP_SUCCESS',
     SIGN_UP_FAILURE: 'SIGN_UP_FAILURE',
-    USER_IS_NULL: 'USER_IS_NULL'
+    USER_IS_NULL: 'USER_IS_NULL',
+    FOLLOW_USER: 'FOLLOW_USER',
+    UNFOLLOW_USER: 'UNFOLLOW_USER'
 };
 
 export default UserActionTypes;

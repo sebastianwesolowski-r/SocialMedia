@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 
+import {selectCurrentUser} from '../../redux/user/user.selectors';
 import {selectUsersData} from '../../redux/users/users.selectors';
 import {selectIsDataLoaded} from '../../redux/users/users.selectors';
 import {signOutStart} from '../../redux/user/user.actions';
@@ -16,7 +17,7 @@ import UserPanelItem from '../user-panel-item/user-panel-item.component';
 
 import './user-panel.styles.scss';
 
-const UserPanel = ({signOutStart, usersData, isDataLoaded}) => {
+const UserPanel = ({signOutStart, usersData, isDataLoaded, currentUser}) => {
     let keyCount = 0;
     const getKey = () => keyCount++;
     const [inputLength, setInputLength] = useState(0);
@@ -35,7 +36,7 @@ const UserPanel = ({signOutStart, usersData, isDataLoaded}) => {
             <div className="user-panel">
                 <SearchBox handleChange={handleChange} placeholder={'Search User'} />
                 <UserPanelItem key={1} url={'addpost'} panelFunction={'Add Post'} icon={<Add />} />
-                <UserPanelItem key={2} url={'profile'} panelFunction={'Profile'} icon={<Profile />} />
+                <UserPanelItem key={2} url={`/profile/${currentUser.displayName}`} panelFunction={'Profile'} icon={<Profile />} />
                 <UserPanelItem key={3} panelFunction={'Sign Out'} icon={<SignOut />} onClickFunction={signOutStart}/>
             </div>
             {
@@ -53,6 +54,7 @@ const UserPanel = ({signOutStart, usersData, isDataLoaded}) => {
 };
 
 const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
     usersData: selectUsersData,
     isDataLoaded: selectIsDataLoaded
 });

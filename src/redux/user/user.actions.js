@@ -54,3 +54,13 @@ export const signUpFailure = error => ({
 export const userIsNull = () => ({
     type: UserActionTypes.USER_IS_NULL
 });
+
+export const followUser = followData => ({
+    type: UserActionTypes.FOLLOW_USER,
+    payload: followData
+});
+
+export const unfollowUser = followData => ({
+    type: UserActionTypes.UNFOLLOW_USER,
+    payload: followData
+});

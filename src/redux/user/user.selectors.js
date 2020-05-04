@@ -11,3 +11,8 @@ export const selectIsProcessing = createSelector(
     [selectUser],
     user => user.isProcessing
 );
+
+export const selectAccess = createSelector(
+    [selectUser],
+    user => user.access
+);

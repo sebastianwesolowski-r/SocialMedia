@@ -1,6 +1,7 @@
 import UserActionTypes from './user.types';
 
 const INITIAL_STATE = {
+    access: false,
     currentUser: null,
     isProcessing: false,
     error: null
@@ -23,6 +24,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         case UserActionTypes.SIGN_IN_SUCCESS:
             return {
                 ...state,
+                access: true,
                 currentUser: action.payload,
                 isProcessing: false,
                 error: null
@@ -30,6 +32,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         case UserActionTypes.SIGN_OUT_SUCCESS:
             return {
                 ...state,
+                access: false,
                 currentUser: null,
                 error: null
             };
@@ -45,6 +48,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         case UserActionTypes.SIGN_UP_FAILURE:
             return {
                 ...state,
+                access: false,
                 isProcessing: false,
                 error: action.payload
             };

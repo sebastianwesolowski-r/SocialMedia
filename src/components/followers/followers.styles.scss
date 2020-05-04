@@ -1,0 +1,22 @@
+@import '../../_variables.scss';
+
+.followers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 620px;
+    height: 500px;
+    margin-top: 35px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    a{
+        text-decoration: none;
+        color: unset;
+    }
+    .follower {
+        font-family: 'Roboto';
+        font-size: 17px;
+        color: map_get($colors, "dark");
+        margin: 20px 0;
+    }
+}

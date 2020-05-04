@@ -1,0 +1,17 @@
+@import '../../_variables.scss';
+
+.back-button {
+    width: 125px;
+    height: 35px;
+    margin-top: 15px;
+    background-color: map_get($colors, "light");
+    color: map_get($colors, "dark");
+    border: 1px solid map_get($colors, "dark");
+    outline: none;
+    transition-duration: 150ms;
+    cursor: pointer;
+    &:hover {
+        background-color: map_get($colors, "dark");
+        color: map_get($colors, "light");
+    }
+}

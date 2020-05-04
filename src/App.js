@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import {createStructuredSelector} from 'reselect';
 
-import {selectCurrentUser} from './redux/user/user.selectors';
+import {selectAccess} from './redux/user/user.selectors';
 import {checkUserSession} from './redux/user/user.actions';
 
 import Header from './components/header/header.component';
@@ -14,7 +14,7 @@ import ProfilePage from './pages/profile-page/profile-page.component';
 
 import './App.css';
 
-function App({currentUser, checkUserSession}) {
+function App({checkUserSession, access}) {
   useEffect(() => {
     checkUserSession();
   }, [checkUserSession]);
@@ -23,21 +23,26 @@ function App({currentUser, checkUserSession}) {
     <div>
       <Header />
       <Switch>
-        <Route exact path="/" render={() => currentUser ? (
+        <Route exact path="/" render={() => access ? (
             <Redirect to="/feed" />
           ) : (
             <LandingPage />
           )
         } />
-        <Route path="/feed" component={FeedPage} />
-        <Route path="/profile" component={ProfilePage} />
+        <Route path="/feed" render={() => access ? (
+            <FeedPage />
+          ) : (
+            <Redirect to="/" />
+          )
+        } />
+        <Route path="/profile" component={ProfilePage}/>
       </Switch>
     </div>
   );
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  access: selectAccess
 });
 
 const mapDispatchToProps = dispatch => ({

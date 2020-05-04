@@ -4,7 +4,30 @@ import UserActionTypes from './user.types';
 
 import {signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, userIsNull} from './user.actions';
 
-import {auth, googleProvider, createUserProfile, getCurrentUser} from '../../firebase/firebase';
+import {auth, googleProvider, firestore ,createUserProfile, getCurrentUser} from '../../firebase/firebase';
+import firebase from '../../firebase/firebase';
+
+export function* followUser({payload: {user, currentUser}}) {
+    const userToFollowRef = yield firestore.doc(`users/${user.id}`);
+    const currentUserRef = yield firestore.doc(`users/${currentUser.id}`);
+    yield userToFollowRef.update({
+        followers: firebase.firestore.FieldValue.arrayUnion(currentUser.displayName)
+    });
+    yield currentUserRef.update({
+        following: firebase.firestore.FieldValue.arrayUnion(user.displayName)
+    });
+}
+
+export function* unfollowUser({payload: {user, currentUser}}) {
+    const userToUnfollowRef = yield firestore.doc(`users/${user.id}`);
+    const currentUserRef = yield firestore.doc(`users/${currentUser.id}`);
+    yield userToUnfollowRef.update({
+        followers: firebase.firestore.FieldValue.arrayRemove(currentUser.displayName)
+    });
+    yield currentUserRef.update({
+        following: firebase.firestore.FieldValue.arrayRemove(user.displayName)
+    });
+}
 
 export function* getSnapshotFromUser(userAuth, additionalData) {
     try {
@@ -93,6 +116,14 @@ export function* onSignUpSuccess() {
     yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
 }
 
+export function* onUserFollow() {
+    yield takeLatest(UserActionTypes.FOLLOW_USER, followUser);
+}
+
+export function* onUserUnfollow() {
+    yield takeLatest(UserActionTypes.UNFOLLOW_USER, unfollowUser);
+}
+
 export function* userSagas() {
-    yield all([call(onGoogleSignInStart), call(onEmailSignInStart), call(onCheckUserSession), call(onSignOutStart), call(onSignUpStart), call(onSignUpSuccess)]);
+    yield all([call(onGoogleSignInStart), call(onEmailSignInStart), call(onCheckUserSession), call(onSignOutStart), call(onSignUpStart), call(onSignUpSuccess), call(onUserFollow), call(onUserUnfollow)]);
 }
