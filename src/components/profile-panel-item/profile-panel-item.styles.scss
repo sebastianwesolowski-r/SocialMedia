@@ -8,15 +8,21 @@
     align-items: center;
     justify-content: center;
     color: map_get($colors, "dark");
+    background: none;
     border: 1px solid map_get($colors, "dark");
     font-family: 'Roboto';
     font-size: 17px;
     cursor: pointer;
+    transition-duration: 250ms;
     .item-count {
         font-family: 'Dosis';
         font-weight: 500;
         font-size: 18px;
         padding-left: 5px;
+    }
+    &:hover {
+        box-shadow: inset 190px 0 0 0 map_get($colors, "dark");
+        color: map_get($colors, "light");
     }
 }
 
@@ -24,4 +30,7 @@
     background-color: map_get($colors, "dark");
     color: map_get($colors, "light");
     border: none;
+    &:hover {
+        box-shadow: none;
+    }
 }

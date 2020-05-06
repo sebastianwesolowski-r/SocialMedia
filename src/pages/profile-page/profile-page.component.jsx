@@ -3,26 +3,16 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {Route, Redirect} from 'react-router-dom';
 
-import {selectCurrentUser} from '../../redux/user/user.selectors';
 import {selectAccess} from '../../redux/user/user.selectors';
 
-import Loader from '../../components/loader/loader.component';
 import Profile from '../../components/profile/profile.component';
 
-const ProfilePage = ({access, match, currentUser}) => {
+const ProfilePage = ({access, match}) => {
     return (
         <div>
             {
                 access ? (
-                    <div>
-                        {
-                            currentUser ? (
-                                <Route path={`${match.path}/:userName`} component={Profile} />
-                            ) : (
-                                <Loader />
-                            )
-                        }
-                    </div>
+                    <Route path={`${match.path}/:userName`} component={Profile} />
                 ) : (
                     <Redirect to="/" />
                 )
@@ -32,7 +22,6 @@ const ProfilePage = ({access, match, currentUser}) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser,
     access: selectAccess
 });
 

@@ -6,8 +6,8 @@ import './user-panel-item.styles.scss';
 const UserPanelItem = ({url, panelFunction, icon, onClickFunction}) => {
     const item = (
         <div className="user-panel-item">
-            <div className="panelFunction">{panelFunction}</div>
             <div className="icon">{icon}</div>
+            <div className="panelFunction">{panelFunction}</div>
         </div>
     )
     return (

@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Dosis:500&display=swap');
 @import '../../_variables.scss';
 
 a {
@@ -8,22 +7,18 @@ a {
 
 .user-panel-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    width: 125px;
-    height: 25px;
-    font-family: 'Dosis';
-    font-weight: 500;
-    font-size: 18px;
+    width: 75px;
+    height: 45px;
+    font-family: 'Roboto';
+    font-size: 13px;
     color: map_get($colors, "light");
+    background: none;
     padding: 0 10px;
-    border: 1px solid map_get($colors, "light");
-    transition-duration: 100ms;
     cursor: pointer;
-    &:hover {
-        border-color: #A4A4A4;
-    }
-    .icon {
-        padding-top: 2px;
+    &:active {
+        color: rgba(255, 255, 255, 0.75);
     }
 }

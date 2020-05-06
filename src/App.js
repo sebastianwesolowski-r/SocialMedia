@@ -7,6 +7,7 @@ import {selectAccess} from './redux/user/user.selectors';
 import {checkUserSession} from './redux/user/user.actions';
 
 import Header from './components/header/header.component';
+import HeaderPanel from './components/header-panel/header-panel.component';
 
 import LandingPage from './pages/landing-page/landing-page.component';
 import FeedPage from './pages/feed-page/feed-page.component';
@@ -20,8 +21,14 @@ function App({checkUserSession, access}) {
   }, [checkUserSession]);
 
   return (
-    <div>
-      <Header />
+    <div className="app">
+      {
+        access ? (
+          <HeaderPanel />
+        ) : (
+          <Header />
+        )
+      }
       <Switch>
         <Route exact path="/" render={() => access ? (
             <Redirect to="/feed" />

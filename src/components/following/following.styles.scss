@@ -18,5 +18,9 @@
         font-size: 17px;
         color: map_get($colors, "dark");
         margin: 20px 0;
+        transition-duration: 150ms;
+        &:hover {
+            color: rgba(0, 0, 0, 0.70);
+        }
     }
 }

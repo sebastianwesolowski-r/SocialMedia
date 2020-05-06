@@ -4,71 +4,70 @@ import {connect} from 'react-redux';
 import {selectCurrentUser} from '../../redux/user/user.selectors';
 import {selectUserProfile} from '../../redux/users/users.selectors';
 
-import {followUser} from '../../redux/user/user.actions';
-import {unfollowUser} from '../../redux/user/user.actions';
-
-import UserPanel from '../user-panel/user-panel.component';
+import Loader from '../loader/loader.component';
 import ProfilePanelItem from '../profile-panel-item/profile-panel-item.component';
 import BackButton from '../back-button/back-button.component';
 import FollowButton from '../follow-button/follow-button.component';
+import Posts from '../posts/posts.component';
 import Followers from '../followers/followers.component';
 import Following from '../following/following.component';
 
 import './profile.styles.scss';
 
-const Profile = ({user, currentUser, followUser, unfollowUser}) => {
+const Profile = ({user, currentUser}) => {
+    const followersCount = user.followers.length;
+    const followingCount = user.following.length;
     const [profileContent, setContent] = useState('posts');
     const renderSwitch = (profileContent) => {
         switch(profileContent) {
             case 'posts': 
                 return (
-                    <div>posts</div>
+                    <Posts/>
                 );
             case 'followers':
                 return (
-                    <Followers user={user} />
+                    <Followers user={user}/>
                 );
             case 'following':
                 return (
-                    <Following user={user} />
+                    <Following user={user}/>
                 );
             default:
                 return (
-                    <div>posts</div>
+                    <Posts />
                 )
         }
     }
 
     return (
-        <div className="page">
-            <UserPanel />
-                <div className="profile">
-                    <div className="profile-name">{user.displayName}</div>
-                    {
-                        currentUser.id !== user.id && (
-                            currentUser.following.find(el => el === user.displayName) ? (
-                                <FollowButton onClick={() => unfollowUser({user, currentUser})}>
-                                    Unfollow
-                                </FollowButton>
-                            ) : (
-                                <FollowButton onClick={() => followUser({user, currentUser})}>
-                                    Follow
-                                </FollowButton>
-                            )
-                        )
-                    }
-                    <div className="profile-panel">
-                        <ProfilePanelItem itemName={"Posts: "} itemCount={1} itemType={'posts'} onClick={() => setContent('posts')} />
-                        <ProfilePanelItem itemName={"Followers: "} itemCount={1} itemType={'followers'} onClick={() => setContent('followers')} />
-                        <ProfilePanelItem itemName={"Following: "} itemCount={1} itemType={'following'} onClick={() => setContent('following')} />
+        <div>
+            {
+                user && currentUser ? (
+                    <div className="page">
+                        <div className="profile">
+                            <div className="profile-name">{user.displayName}</div>
+                            {
+                                currentUser.id !== user.id && (
+                                    <FollowButton currentUserName={currentUser.displayName} user={user}/>
+                                )
+                            }
+                            <div className="profile-panel">
+                                <ProfilePanelItem itemName={"Posts: "} itemCount={1} itemType={'posts'}  active={profileContent} onClick={() => setContent('posts')} />
+                                <ProfilePanelItem itemName={"Followers: "} itemCount={followersCount} itemType={'followers'} active={profileContent} onClick={() => setContent('followers')} />
+                                <ProfilePanelItem itemName={"Following: "} itemCount={followingCount} itemType={'following'} active={profileContent} onClick={() => setContent('following')} />
+                            </div>
+                            <div className="profile-content">
+                                {
+                                    renderSwitch(profileContent)
+                                }
+                            </div>
+                        </div>
+                        <BackButton />
                     </div>
-                    <div className="profile-content">
-                        {
-                            renderSwitch(profileContent)
-                        }
-                    </div>
-                </div>
-            <BackButton />
+                ) : (
+                    <Loader />
+                )
+            }
         </div>
     );
 };
@@ -78,9 +77,4 @@ const mapStateToProps = (state, ownProps) => ({
     user: selectUserProfile(ownProps.match.params.userName)(state)
 });
 
-const mapDispatchToProps = dispatch => ({
-    followUser: followData => dispatch(followUser(followData)),
-    unfollowUser: followData => dispatch(unfollowUser(followData))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps)(Profile);

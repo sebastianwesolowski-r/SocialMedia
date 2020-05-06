@@ -1,11 +1,24 @@
+@import '../../_variables.scss';
+
 .follow-button {
     position: absolute;
-    margin-left: 215px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 230px;
     margin-top: 20px;
-    width: 110px;
-    height: 15px;
+    width: 125px;
+    height: 28px;
     text-align: center;
     font-family: 'Roboto';
-    font-size: 18px;
+    font-size: 16px;
+    color: map_get($colors, "light");;
+    background-color: map_get($colors, "dark");
     cursor: pointer;
+    transition-duration: 200ms;
+    &:hover {
+        color: map_get($colors, "dark");;
+        background-color: map_get($colors, "light");
+        border: 1px solid map_get($colors, "dark");
+    }
 }

@@ -4,29 +4,37 @@ import UserActionTypes from './user.types';
 
 import {signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, userIsNull} from './user.actions';
 
+import {fetchUsersStart} from '../users/users.actions';
+
 import {auth, googleProvider, firestore ,createUserProfile, getCurrentUser} from '../../firebase/firebase';
 import firebase from '../../firebase/firebase';
 
-export function* followUser({payload: {user, currentUser}}) {
+export function* followUser({payload: {user, currentUserData}}) {
     const userToFollowRef = yield firestore.doc(`users/${user.id}`);
-    const currentUserRef = yield firestore.doc(`users/${currentUser.id}`);
+    const currentUserRef = yield firestore.doc(`users/${currentUserData.id}`);
     yield userToFollowRef.update({
-        followers: firebase.firestore.FieldValue.arrayUnion(currentUser.displayName)
+        followers: firebase.firestore.FieldValue.arrayUnion(currentUserData.displayName)
     });
     yield currentUserRef.update({
         following: firebase.firestore.FieldValue.arrayUnion(user.displayName)
     });
+    yield put(fetchUsersStart());
+    //yield user.followers = user.followers.push(currentUser.displayName);
+    //yield currentUser.following = currentUser.following.push(user.displayName);
 }
 
-export function* unfollowUser({payload: {user, currentUser}}) {
+export function* unfollowUser({payload: {user, currentUserData}}) {
     const userToUnfollowRef = yield firestore.doc(`users/${user.id}`);
-    const currentUserRef = yield firestore.doc(`users/${currentUser.id}`);
+    const currentUserRef = yield firestore.doc(`users/${currentUserData.id}`);
     yield userToUnfollowRef.update({
-        followers: firebase.firestore.FieldValue.arrayRemove(currentUser.displayName)
+        followers: firebase.firestore.FieldValue.arrayRemove(currentUserData.displayName)
     });
     yield currentUserRef.update({
         following: firebase.firestore.FieldValue.arrayRemove(user.displayName)
     });
+    yield put(fetchUsersStart());
+    //yield user.followers = user.followers.filter(el => el !== currentUser.displayName);
+    //yield currentUser.following = currentUser.following.filter(el => el !== user.displayName);
 }
 
 export function* getSnapshotFromUser(userAuth, additionalData) {

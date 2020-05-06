@@ -9,15 +9,16 @@ import {signOutStart} from '../../redux/user/user.actions';
 
 import {ReactComponent as Add} from '../../assets/add.svg';
 import {ReactComponent as Profile} from '../../assets/profile.svg';
-import {ReactComponent as SignOut} from '../../assets/signout.svg';
+import {ReactComponent as SignOut} from '../../assets/signout.svg'
 
+import AppBaner from '../app-baner/app-baner.component';
 import SearchBox from '../search-box/search-box.component';
 import SearchUserItem from '../search-user-item/search-user-item.component';
 import UserPanelItem from '../user-panel-item/user-panel-item.component';
 
-import './user-panel.styles.scss';
+import './header-panel.styles.scss';
 
-const UserPanel = ({signOutStart, usersData, isDataLoaded, currentUser}) => {
+const HeaderPanel = ({signOutStart, usersData, isDataLoaded, currentUser}) => {
     let keyCount = 0;
     const getKey = () => keyCount++;
     const [inputLength, setInputLength] = useState(0);
@@ -32,24 +33,25 @@ const UserPanel = ({signOutStart, usersData, isDataLoaded, currentUser}) => {
         }
     }
     return (
-        <div>
-            <div className="user-panel">
-                <SearchBox handleChange={handleChange} placeholder={'Search User'} />
-                <UserPanelItem key={1} url={'addpost'} panelFunction={'Add Post'} icon={<Add />} />
-                <UserPanelItem key={2} url={`/profile/${currentUser.displayName}`} panelFunction={'Profile'} icon={<Profile />} />
-                <UserPanelItem key={3} panelFunction={'Sign Out'} icon={<SignOut />} onClickFunction={signOutStart}/>
-            </div>
-            {
-                inputLength > 2 && 
-                    <div className="filtered-users">
-                        {
-                            filteredUsers.map(user => (
-                                <SearchUserItem key={getKey()} userName={user} />
-                            ))
-                        }
-                    </div>
-            } 
+    <div className="header-panel">
+        <AppBaner />
+        <SearchBox handleChange={handleChange} placeholder={'Search User'} />
+        <div className="user-panel">
+            <UserPanelItem key={1} url={'/addpost'} panelFunction={'Add Post'} icon={<Add />} />
+            <UserPanelItem key={2} url={`/profile/${currentUser.displayName}`} panelFunction={'Profile'} icon={<Profile />} />
+            <UserPanelItem key={3} panelFunction={'Sign Out'} icon={<SignOut />} onClickFunction={signOutStart}/>
         </div>
+        {
+            inputLength > 2 && 
+                <div className="filtered-users">
+                    {
+                        filteredUsers.map(user => (
+                            <SearchUserItem key={getKey()} userName={user} />
+                        ))
+                    }
+                </div>
+        } 
+    </div>
     );
 };
 
@@ -63,4 +65,4 @@ const mapDispatchToProps = dispatch => ({
     signOutStart: () => dispatch(signOutStart())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderPanel);

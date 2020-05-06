@@ -5,6 +5,8 @@
     height: 35px;
     margin-top: 15px;
     background-color: map_get($colors, "light");
+    font-family: 'Roboto';
+    font-size: 15px;
     color: map_get($colors, "dark");
     border: 1px solid map_get($colors, "dark");
     outline: none;
