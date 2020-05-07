@@ -17,12 +17,19 @@
         height: 45px;
     }
     .filtered-users {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         position: absolute;
         top: 55px;
         left: 0;
         right: 0;
         width: 250px;
+        max-height: 170px;
+        overflow-x: unset;
+        overflow-y: scroll;
         margin-left: auto;
         margin-right: auto;
+        background-color: #FAFAFA;
     }
 }

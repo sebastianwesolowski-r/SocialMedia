@@ -1,0 +1,7 @@
+const PostsActionTypes = {
+    UPLOAD_POST_START: 'UPLOAD_POST_START',
+    UPLOAD_POST_SUCCESS: 'UPLOAD_POST_SUCCESS',
+    UPLOAD_POST_FAILURE: 'UPLOAD_POST_FAILURE'
+};
+
+export default PostsActionTypes;

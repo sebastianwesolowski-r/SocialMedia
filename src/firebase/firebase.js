@@ -2,10 +2,13 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/storage';
 
 import config from './config';
 
 firebase.initializeApp(config);
+
+export const storage = firebase.storage();
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
@@ -64,6 +67,28 @@ export const convertUsersSnapshotToMap = users => {
         accumulator[user.displayName] = user;
         return accumulator;
     }, {});
+};
+
+export const createPost = async (postMessage, currentUser, imageUrl) => {
+    const postRef = firestore.collection('posts').doc();
+    const uploadedBy = currentUser;
+    const message = postMessage;
+    const image = imageUrl;
+    const likes = [];
+    const comments = [];    
+    const createdAt = new Date();
+    try {
+        await postRef.set({
+            uploadedBy,
+            message,
+            image,
+            likes,
+            comments,
+            createdAt
+        });
+    } catch(error) {
+        console.log(error);
+    }
 };
 
 export default firebase;
