@@ -69,6 +69,25 @@ export const convertUsersSnapshotToMap = users => {
     }, {});
 };
 
+export const convertPostsSnapshotToMap = posts => {
+    const transformedPosts = posts.docs.map(doc => {
+        const {uploadedBy, message, image, likes, comments, createdAt} = doc.data();
+        return {
+            id: doc.id,
+            uploadedBy,
+            message,
+            image,
+            likes,
+            comments,
+            createdAt
+        };
+    });
+    return transformedPosts.reduce((accumulator, post) => {
+        accumulator[post.id] = post;
+        return accumulator;
+    }, {});
+};
+
 export const createPost = async (postMessage, currentUser, imageUrl) => {
     const postRef = firestore.collection('posts').doc();
     const uploadedBy = currentUser;

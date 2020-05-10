@@ -4,7 +4,7 @@ import UserActionTypes from '../user/user.types';
 const INITIAL_STATE = {
     usersData: null,
     isLoaded: false,
-    error: undefined
+    error: null
 };
 
 const usersReducer = (state = INITIAL_STATE, action) => {
@@ -12,14 +12,14 @@ const usersReducer = (state = INITIAL_STATE, action) => {
         case UsersActionTypes.FETCH_USERS_START:
             return {
                 ...state,
-                isLoaded: false
+                isLoaded: false,
+                error: null
             };
         case UsersActionTypes.FETCH_USERS_SUCCESS:
             return {
                 ...state,
                 usersData: action.payload,
-                isLoaded: true,
-                error: undefined
+                isLoaded: true
             };
         case UsersActionTypes.FETCH_USERS_FAILURE:
             return {

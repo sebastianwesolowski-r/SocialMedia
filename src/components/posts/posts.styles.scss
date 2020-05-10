@@ -1,0 +1,16 @@
+.posts {
+    display: flex;
+    flex: auto;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 97%;
+    height: 100%;
+    margin-top: 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    &::after {
+        content: '';
+        flex: 0 0 32%;
+        max-width: 248.45px;
+    }
+}

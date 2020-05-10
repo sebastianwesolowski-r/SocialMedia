@@ -4,9 +4,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 620px;
-    height: 500px;
-    margin-top: 35px;
+    width: 97%;
+    height: 100%;
+    margin-top: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
     a{
@@ -15,8 +15,12 @@
     }
     .follower {
         font-family: 'Roboto';
-        font-size: 17px;
+        font-size: 19px;
         color: map_get($colors, "dark");
         margin: 20px 0;
+        transition-duration: 150ms;
+        &:hover {
+            color: rgba(0, 0, 0, 0.70);
+        }
     }
 }

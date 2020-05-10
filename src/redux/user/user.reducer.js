@@ -14,7 +14,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
         case UserActionTypes.CHECK_USER_SESSION:
             return {
                 ...state,
-                isProcessing: true
+                isProcessing: true,
+                error: null
             };
         case UserActionTypes.SIGN_UP_SUCCESS:
             return {
@@ -40,8 +41,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 isProcessing: false,
-                currentUser: null,
-                error: null
+                currentUser: null
             }
         case UserActionTypes.SIGN_IN_FAILURE:
         case UserActionTypes.SIGN_OUT_FAILURE:
