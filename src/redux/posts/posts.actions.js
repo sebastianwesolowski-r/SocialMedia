@@ -27,3 +27,18 @@ export const uploadPostFailure = error => ({
     type: PostsActionTypes.UPLOAD_POST_FAILURE,
     payload: error
 });
+
+export const likePost = likeData => ({
+    type: PostsActionTypes.LIKE_POST,
+    payload: likeData
+});
+
+export const commentPost = commentData => ({
+    type: PostsActionTypes.COMMENT_POST,
+    payload: commentData
+});
+
+export const updatePost = postData => ({
+    type: PostsActionTypes.UPDATE_POST,
+    payload: postData
+});

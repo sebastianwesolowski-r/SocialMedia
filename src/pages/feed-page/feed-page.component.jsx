@@ -8,6 +8,7 @@ import {fetchUsersStart} from '../../redux/users/users.actions';
 import {fetchPostsStart} from '../../redux/posts/posts.actions';
 import {selectPostsData} from '../../redux/posts/posts.selectors';
 
+import FeedPost from '../../components/feed-post/feed-post.component';
 import Loader from '../../components/loader/loader.component';
 
 import './feed-page.styles.scss';
@@ -24,9 +25,13 @@ const FeedPage = ({currentUser, usersData, postsData, fetchUsersStart, fetchPost
     return (
         <div>
             {
-                currentUser && usersData ? (
+                currentUser && usersData && postsData ? (
                     <div className="feed-page">
-
+                        {
+                            Object.values(postsData).filter(el => currentUser.following.includes(el.uploadedBy)).map(post => (
+                                <FeedPost key={post.id} post={post} />
+                            ))
+                        }
                     </div>
                 ) : (
                     <Loader />

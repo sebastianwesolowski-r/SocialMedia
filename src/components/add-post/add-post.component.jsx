@@ -39,7 +39,7 @@ const AddPost = ({setHidden, currentUser, uploadPostStart, isUpdating}) => {
                     <input className="post-message" type="text" onChange={handleMessageChange} placeholder="Enter post message" value={postMessage} name="message" required/>    
                     <div className="imageupload">
                         Upload image
-                        <input type="file" onChange={handleImageChange} title="Upload image" name="image"/>    
+                        <input type="file" onChange={handleImageChange} title="Upload image" name="image" required/>    
                     </div>
                     <CustomButton type="submit">
                         {

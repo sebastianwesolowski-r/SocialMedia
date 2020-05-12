@@ -1,5 +1,6 @@
 import PostsActionTypes from './posts.types';
 import UserActionTypes from '../user/user.types';
+import {updatePost} from './posts.utils';
 
 const INITIAL_STATE = {
     postsData: null,
@@ -45,6 +46,11 @@ const postsReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 postsData: null
+            };
+        case PostsActionTypes.UPDATE_POST:
+            return {
+                ...state,
+                postsData: updatePost(state.postsData, action.payload)
             };
         default: return state;
     }

@@ -16,3 +16,13 @@ export const selectUserPosts = userName => createSelector(
     [selectPostsData],
     posts => Object.values(posts).filter(el => el.uploadedBy === userName)
 );
+
+export const selectPostLikes = postId => createSelector(
+    [selectPostsData],
+    posts => posts[postId].likes
+);
+
+export const selectPostComments = postId => createSelector(
+    [selectPostsData],
+    posts => posts[postId].comments
+);

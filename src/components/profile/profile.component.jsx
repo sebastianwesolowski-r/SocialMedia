@@ -9,15 +9,13 @@ import Loader from '../loader/loader.component';
 import ProfilePanelItem from '../profile-panel-item/profile-panel-item.component';
 import BackButton from '../back-button/back-button.component';
 import FollowButton from '../follow-button/follow-button.component';
-import Posts from '../posts/posts.component';
+import ProfilePosts from '../profile-posts/profile-posts.component';
 import Followers from '../followers/followers.component';
 import Following from '../following/following.component';
 
 import './profile.styles.scss';
 
 const Profile = ({user, currentUser, userposts, posts}) => {
-    
-    console.log(Object.values(posts).filter(el => currentUser.following.includes(el.uploadedBy)));
     const postsCount = userposts.length;
     const followersCount = user.followers.length;
     const followingCount = user.following.length;
@@ -26,7 +24,7 @@ const Profile = ({user, currentUser, userposts, posts}) => {
         switch(profileContent) {
             case 'posts': 
                 return (
-                    <Posts userposts={userposts} />
+                    <ProfilePosts userposts={userposts} />
                 );
             case 'followers':
                 return (
@@ -38,7 +36,7 @@ const Profile = ({user, currentUser, userposts, posts}) => {
                 );
             default:
                 return (
-                    <Posts />
+                    <ProfilePosts />
                 )
         }
     }
