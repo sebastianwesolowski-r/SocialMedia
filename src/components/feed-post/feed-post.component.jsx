@@ -3,12 +3,13 @@ import {connect} from 'react-redux';
 
 import {selectCurrentUser} from '../../redux/user/user.selectors';
 import {selectPostLikes, selectPostComments} from '../../redux/posts/posts.selectors';
-import {likePost, commentPost} from '../../redux/posts/posts.actions';
+import {likePost, dislikePost, commentPost} from '../../redux/posts/posts.actions';
 
 import {Link} from 'react-router-dom';
 
 import {ReactComponent as ProfileIcon} from '../../assets/profile-icon.svg';
 import {ReactComponent as Likes} from '../../assets/likes-feed.svg';
+import {ReactComponent as Liked} from '../../assets/liked.svg';
 import {ReactComponent as Comments} from '../../assets/comments-feed.svg';
 import {ReactComponent as UploadComment} from '../../assets/upload-comment.svg';
 
@@ -16,7 +17,7 @@ import CustomPopup from '../custom-popup/custom-popup.component';
 
 import './feed-post.styles.scss';
 
-const FeedPost = ({post, currentUser, likePost, commentPost, postLikes, postComments}) => {
+const FeedPost = ({post, currentUser, likePost, dislikePost, commentPost, postLikes, postComments}) => {
     const {uploadedBy, image, message, createdAt} = post;
     const currentUserName = currentUser.displayName;
     const postId = post.id;
@@ -43,12 +44,18 @@ const FeedPost = ({post, currentUser, likePost, commentPost, postLikes, postComm
             <div className="message">{message}</div>
             <div className="post-stats">
                 <div className="stat">
-                    <Likes onClick={() => likePost({currentUserName, postId})} />
+                    {
+                        postLikes.includes(currentUserName) ? (
+                            <Liked onClick={() => dislikePost({currentUserName, postId})}/>
+                        ) : (
+                            <Likes onClick={() => likePost({currentUserName, postId})} />
+                        )
+                    }
                     <span onClick={() => {setPopupType('Likes'); setPopupItems(postLikes); setPopup(true);}}>{postLikes.length}</span>
                 </div>
                 <div className="stat">
                     <Comments />
-                    <span>{postComments.length}</span>
+                    <span onClick={() => {setPopupType('Comments'); setPopupItems(postComments); setPopup(true);}}>{postComments.length}</span>
                 </div>
                 {
                     popup ? (
@@ -72,6 +79,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
     likePost: likeData => dispatch(likePost(likeData)),
+    dislikePost: dislikeData => dispatch(dislikePost(dislikeData)),
     commentPost: commentData => dispatch(commentPost(commentData))
 });
 

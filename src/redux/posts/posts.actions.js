@@ -33,6 +33,11 @@ export const likePost = likeData => ({
     payload: likeData
 });
 
+export const dislikePost = dislikeData => ({
+    type: PostsActionTypes.DISLIKE_POST,
+    payload: dislikeData
+});
+
 export const commentPost = commentData => ({
     type: PostsActionTypes.COMMENT_POST,
     payload: commentData

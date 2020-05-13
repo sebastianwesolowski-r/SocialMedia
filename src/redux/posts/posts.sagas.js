@@ -44,6 +44,14 @@ export function* likePost({payload: {currentUserName, postId}}) {
     yield updatePostState(postId);
 }
 
+export function* dislikePost({payload: {currentUserName, postId}}) {
+    const postToDislikeRef = yield firestore.doc(`posts/${postId}`);
+    yield postToDislikeRef.update({
+        likes: firebase.firestore.FieldValue.arrayRemove(currentUserName)
+    });
+    yield updatePostState(postId);
+}
+
 export function* commentPost({payload: {currentUserName, comment, postId}}) {
     const postToCommentRef = yield firestore.doc(`posts/${postId}`);
     yield postToCommentRef.update({
@@ -72,10 +80,14 @@ export function* onPostLike() {
     yield takeLatest(PostsActionTypes.LIKE_POST, likePost);
 }
 
+export function* onPostDislike() {
+    yield takeLatest(PostsActionTypes.DISLIKE_POST, dislikePost);
+}
+
 export function* onPostComment() {
     yield takeLatest(PostsActionTypes.COMMENT_POST, commentPost);
 }
 
 export function* postsSagas() {
-    yield all([call(onPostUpload), call(onFetchPostsStart), call(onPostLike), call(onPostComment)]);
+    yield all([call(onPostUpload), call(onFetchPostsStart), call(onPostLike), call(onPostDislike), call(onPostComment)]);
 }

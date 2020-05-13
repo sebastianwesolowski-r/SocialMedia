@@ -2,11 +2,13 @@ import React from 'react';
 
 import {ReactComponent as Close} from '../../assets/close.svg';
 
+import CustomPopupPanel from '../custom-popup-item/custom-popup-panel.component';
+
 import './custom-popup.styles.scss';
 
 const CustomPopup = ({type, items, setHidden}) => {
-    let keyCount = 0;
-    const getKey = () => keyCount++;
+    //let keyCount = 0;
+    //const getKey = () => keyCount++;
     return(
         <div className="overlay">
             <div className="popup">
@@ -15,11 +17,7 @@ const CustomPopup = ({type, items, setHidden}) => {
                     <Close onClick={() => setHidden()} />
                 </div>
                 <div className="popup-items">
-                    {
-                        items.map(item => (
-                            <div key={getKey()} className={type}>{item}</div>
-                        ))
-                    }
+                    <CustomPopupPanel items={items} type={type} />
                 </div>
             </div>
         </div>

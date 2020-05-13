@@ -26,7 +26,7 @@ export const createUserProfile = async(userAuth, additionalData) => {
         const {displayName, email} = userAuth;
         const createdAt = new Date();
         const followers = [];
-        const following = [];
+        const following = ["Sebastian Wesołowski"];
         try {
             await userRef.set({
                 displayName,
