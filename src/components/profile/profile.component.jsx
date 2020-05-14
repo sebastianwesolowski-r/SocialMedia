@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 import {selectCurrentUser} from '../../redux/user/user.selectors';
 import {selectUserProfile} from '../../redux/users/users.selectors';
-import {selectUserPosts, selectPostsData} from '../../redux/posts/posts.selectors';
+import {selectUserPosts} from '../../redux/posts/posts.selectors';
 
 import Loader from '../loader/loader.component';
 import ProfilePanelItem from '../profile-panel-item/profile-panel-item.component';
@@ -15,7 +15,9 @@ import Following from '../following/following.component';
 
 import './profile.styles.scss';
 
-const Profile = ({user, currentUser, userposts, posts}) => {
+const Profile = ({user, currentUser, userposts}) => {
+    const userFollowers = user.followers;
+    const userFollowing = user.following;
     const postsCount = userposts.length;
     const followersCount = user.followers.length;
     const followingCount = user.following.length;
@@ -28,11 +30,11 @@ const Profile = ({user, currentUser, userposts, posts}) => {
                 );
             case 'followers':
                 return (
-                    <Followers user={user}/>
+                    <Followers followers={userFollowers}/>
                 );
             case 'following':
                 return (
-                    <Following user={user}/>
+                    <Following following={userFollowing}/>
                 );
             default:
                 return (
@@ -77,8 +79,7 @@ const Profile = ({user, currentUser, userposts, posts}) => {
 const mapStateToProps = (state, ownProps) => ({
     currentUser: selectCurrentUser(state),
     user: selectUserProfile(ownProps.match.params.userName)(state),
-    userposts: selectUserPosts(ownProps.match.params.userName)(state),
-    posts: selectPostsData(state)
+    userposts: selectUserPosts(ownProps.match.params.userName)(state)
 });
 
 export default connect(mapStateToProps)(Profile);

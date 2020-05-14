@@ -8,7 +8,8 @@ const PostsActionTypes = {
     LIKE_POST: 'LIKE_POST',
     DISLIKE_POST: 'DISLIKE_POST',
     COMMENT_POST: 'COMMENT_POST',
-    UPDATE_POST: 'UPDATE_POST'
+    UPDATE_POST: 'UPDATE_POST',
+    DELETE_POST: 'DELETE_POST'
 };
 
 export default PostsActionTypes;

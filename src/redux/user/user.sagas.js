@@ -19,8 +19,6 @@ export function* followUser({payload: {user, currentUserData}}) {
         following: firebase.firestore.FieldValue.arrayUnion(user.displayName)
     });
     yield put(fetchUsersStart());
-    //yield user.followers = user.followers.push(currentUser.displayName);
-    //yield currentUser.following = currentUser.following.push(user.displayName);
 }
 
 export function* unfollowUser({payload: {user, currentUserData}}) {
@@ -33,8 +31,6 @@ export function* unfollowUser({payload: {user, currentUserData}}) {
         following: firebase.firestore.FieldValue.arrayRemove(user.displayName)
     });
     yield put(fetchUsersStart());
-    //yield user.followers = user.followers.filter(el => el !== currentUser.displayName);
-    //yield currentUser.following = currentUser.following.filter(el => el !== user.displayName);
 }
 
 export function* getSnapshotFromUser(userAuth, additionalData) {

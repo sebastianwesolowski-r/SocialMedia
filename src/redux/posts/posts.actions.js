@@ -47,3 +47,8 @@ export const updatePost = postData => ({
     type: PostsActionTypes.UPDATE_POST,
     payload: postData
 });
+
+export const deletePost = postId => ({
+    type: PostsActionTypes.DELETE_POST,
+    payload: postId
+});

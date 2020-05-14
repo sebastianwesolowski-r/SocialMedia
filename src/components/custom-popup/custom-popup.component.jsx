@@ -6,11 +6,11 @@ import CustomPopupPanel from '../custom-popup-item/custom-popup-panel.component'
 
 import './custom-popup.styles.scss';
 
-const CustomPopup = ({type, items, setHidden}) => {
+const CustomPopup = ({type, items, setHidden, overlayNone}) => {
     //let keyCount = 0;
     //const getKey = () => keyCount++;
     return(
-        <div className="overlay">
+        <div className={`${overlayNone ? 'overlay-none' : ""} overlay`}>
             <div className="popup">
                 <div className="popup-type">
                     <span>{type}</span>

@@ -4,7 +4,7 @@ import {createStructuredSelector} from 'reselect';
 
 import {selectIsPostUpdating} from '../../redux/posts/posts.selectors';
 import {uploadPostStart} from '../../redux/posts/posts.actions';
-import {selectCurrentUser} from '../../redux/user/user.selectors';
+import {selectCurrentUserName} from '../../redux/user/user.selectors';
 
 import Spinner from '../spinner/spinner.component';
 import CustomButton from '../custom-button/custom-button.component';
@@ -13,8 +13,7 @@ import {ReactComponent as Close} from '../../assets/close.svg';
 
 import './add-post.styles.scss';
 
-const AddPost = ({setHidden, currentUser, uploadPostStart, isUpdating}) => {
-    const currentUserName = currentUser.displayName;
+const AddPost = ({setHidden, currentUserName, uploadPostStart, isUpdating}) => {
     const [postMessage, setPostMessage] = useState('');
     const [postImage, setPostImage] = useState(null);
     const handleMessageChange = event => {
@@ -31,9 +30,7 @@ const AddPost = ({setHidden, currentUser, uploadPostStart, isUpdating}) => {
     return (
         <div className="add-post-page">
             <div className="add-post-panel">
-                <CustomButton className="close" onClick={() => setHidden()}>
-                    <Close />
-                </CustomButton>
+                <Close className="close" onClick={() => setHidden()}/>
                 <div>Add Post</div>
                 <form onSubmit={handleSubmit}>
                     <input className="post-message" type="text" onChange={handleMessageChange} placeholder="Enter post message" value={postMessage} name="message" required/>    
@@ -57,7 +54,7 @@ const AddPost = ({setHidden, currentUser, uploadPostStart, isUpdating}) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser,
+    currentUserName: selectCurrentUserName,
     isUpdating: selectIsPostUpdating
 });
 

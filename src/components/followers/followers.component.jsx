@@ -3,13 +3,13 @@ import {Link} from 'react-router-dom';
 
 import './followers.styles.scss';
 
-const Followers = ({user}) => {
+const Followers = ({followers}) => {
     let keyCount = 0;
     const getKey = () => keyCount++;
     return (
         <div className="followers">
             {
-                user.followers.map(follower => (
+                followers.map(follower => (
                     <div className="follower" key={getKey()}>
                         <Link to={`/profile/${follower}`}>
                             {follower}

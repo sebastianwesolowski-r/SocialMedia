@@ -3,8 +3,8 @@ import {createStructuredSelector} from 'reselect';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
-import {selectCurrentUser} from '../../redux/user/user.selectors';
-import {likePost, dislikePost, commentPost} from '../../redux/posts/posts.actions';
+import {selectCurrentUserName} from '../../redux/user/user.selectors';
+import {likePost, dislikePost, commentPost, deletePost} from '../../redux/posts/posts.actions';
 
 import {ReactComponent as ProfileIcon} from '../../assets/profile-icon.svg';
 import {ReactComponent as Close} from '../../assets/close.svg';
@@ -14,14 +14,17 @@ import {ReactComponent as Liked} from '../../assets/liked.svg';
 import {ReactComponent as Comments} from '../../assets/comments-feed.svg';
 import {ReactComponent as UploadComment} from '../../assets/upload-comment.svg';
 
+import CustomPopup from '../custom-popup/custom-popup.component';
+
 import './post-popup.styles.scss';
 
-const PostPopup = ({userpost, currentUser, postLikes, postComments, likePost, dislikePost, commentPost, showPopup}) => {
-    const {image, uploadedBy} = userpost;
-    const currentUserName = currentUser.displayName;
+const PostPopup = ({userpost, currentUserName, postLikes, postComments, likePost, dislikePost, commentPost, deletePost, showPopup}) => {
+    const {uploadedBy, image, message} = userpost;
     const postId = userpost.id;
     let keyCount = 0;
     const getKey = () => keyCount++;
+    const [popup, setPopup] = useState(false);
+    const setHidden = () => setPopup(!popup);
     const [comment, setComment] = useState('');
     const handleChange = event => {
         setComment(event.target.value);
@@ -29,7 +32,11 @@ const PostPopup = ({userpost, currentUser, postLikes, postComments, likePost, di
     return (
         <div className="overlay">
             <div className="post-popup">
-                <div className="image-section" style={{backgroundImage: `url(${image})`}}></div>
+                <div className="image-section" style={{backgroundImage: `url(${image})`}}>
+                    <div className="message-overlay">
+                        {message}
+                    </div>
+                </div>
                 <div className="user-section">
                     <div className="author">
                         <div className="author-username">
@@ -39,7 +46,7 @@ const PostPopup = ({userpost, currentUser, postLikes, postComments, likePost, di
                         <div className="navigation">
                             {
                                 uploadedBy === currentUserName ? (
-                                    <DeletePost />
+                                    <DeletePost onClick={() => deletePost(postId)}/>
                                 ) : null
                             }
                             <Close onClick={() => showPopup()}/>
@@ -66,7 +73,7 @@ const PostPopup = ({userpost, currentUser, postLikes, postComments, likePost, di
                                     <Likes onClick={() => likePost({currentUserName, postId})} />
                                 )
                             }
-                            <span>{postLikes.length}</span>
+                            <span onClick={() => setPopup(true)}>{postLikes.length}</span>
                         </div>
                         <div className="stat">
                             <Comments />
@@ -79,18 +86,24 @@ const PostPopup = ({userpost, currentUser, postLikes, postComments, likePost, di
                     </div>
                 </div>
             </div>
+            {
+                popup ? (
+                    <CustomPopup type={'Likes'} items={postLikes} setHidden={setHidden} overlayNone={true}/>
+                ) : null
+            }
         </div>
     );
 };
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser
+    currentUserName: selectCurrentUserName
 });
 
 const mapDispatchToProps = dispatch => ({
     likePost: likeData => dispatch(likePost(likeData)),
     dislikePost: dislikeData => dispatch(dislikePost(dislikeData)),
-    commentPost: commentData => dispatch(commentPost(commentData))
+    commentPost: commentData => dispatch(commentPost(commentData)),
+    deletePost: postId => dispatch(deletePost(postId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostPopup);

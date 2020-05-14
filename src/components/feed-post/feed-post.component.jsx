@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 
-import {selectCurrentUser} from '../../redux/user/user.selectors';
+import {selectCurrentUserName} from '../../redux/user/user.selectors';
 import {selectPostLikes, selectPostComments} from '../../redux/posts/posts.selectors';
 import {likePost, dislikePost, commentPost} from '../../redux/posts/posts.actions';
 
@@ -17,9 +17,8 @@ import CustomPopup from '../custom-popup/custom-popup.component';
 
 import './feed-post.styles.scss';
 
-const FeedPost = ({post, currentUser, likePost, dislikePost, commentPost, postLikes, postComments}) => {
+const FeedPost = ({post, currentUserName, likePost, dislikePost, commentPost, postLikes, postComments}) => {
     const {uploadedBy, image, message, createdAt} = post;
-    const currentUserName = currentUser.displayName;
     const postId = post.id;
 
     const [comment, setComment] = useState('');
@@ -72,7 +71,7 @@ const FeedPost = ({post, currentUser, likePost, dislikePost, commentPost, postLi
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    currentUser: selectCurrentUser(state),
+    currentUserName: selectCurrentUserName(state),
     postLikes: selectPostLikes(ownProps.post.id)(state),
     postComments: selectPostComments(ownProps.post.id)(state)
 });

@@ -68,6 +68,11 @@ export function* updatePostState(postId) {
     yield put(updatePost(postData));
 }
 
+export function* deletePost({payload: postId}) {
+    yield firestore.doc(`posts/${postId}`).delete();
+    yield put(fetchPostsStart());
+}
+
 export function* onFetchPostsStart() {
     yield takeLatest(PostsActionTypes.FETCH_POSTS_START, fetchPosts);
 }
@@ -88,6 +93,10 @@ export function* onPostComment() {
     yield takeLatest(PostsActionTypes.COMMENT_POST, commentPost);
 }
 
+export function* onPostDelete() {
+    yield takeLatest(PostsActionTypes.DELETE_POST, deletePost);
+}
+
 export function* postsSagas() {
-    yield all([call(onPostUpload), call(onFetchPostsStart), call(onPostLike), call(onPostDislike), call(onPostComment)]);
+    yield all([call(onPostUpload), call(onFetchPostsStart), call(onPostLike), call(onPostDislike), call(onPostComment), call(onPostDelete)]);
 }

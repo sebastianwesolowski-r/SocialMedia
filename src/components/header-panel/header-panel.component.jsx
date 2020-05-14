@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 
-import {selectCurrentUser} from '../../redux/user/user.selectors';
+import {selectCurrentUserName} from '../../redux/user/user.selectors';
 import {selectUsersData} from '../../redux/users/users.selectors';
 import {selectIsDataLoaded} from '../../redux/users/users.selectors';
 import {signOutStart} from '../../redux/user/user.actions';
@@ -19,7 +19,7 @@ import UserPanelItem from '../user-panel-item/user-panel-item.component';
 
 import './header-panel.styles.scss';
 
-const HeaderPanel = ({signOutStart, usersData, isDataLoaded, currentUser}) => {
+const HeaderPanel = ({signOutStart, usersData, isDataLoaded, currentUserName}) => {
     let keyCount = 0;
     const getKey = () => keyCount++;
     const [addPostPage, showAddPostPage] = useState(false);
@@ -42,7 +42,7 @@ const HeaderPanel = ({signOutStart, usersData, isDataLoaded, currentUser}) => {
                 <SearchBox handleChange={handleChange} placeholder={'Search User'} />
                 <div className="user-panel">
                     <UserPanelItem key={1} panelFunction={'Add Post'} icon={<Add />} onClickFunction={() => setHidden()} />
-                    <UserPanelItem key={2} url={`/profile/${currentUser.displayName}`} panelFunction={'Profile'} icon={<Profile />} />
+                    <UserPanelItem key={2} url={`/profile/${currentUserName}`} panelFunction={'Profile'} icon={<Profile />} />
                     <UserPanelItem key={3} panelFunction={'Sign Out'} icon={<SignOut />} onClickFunction={signOutStart}/>
                 </div>
                 {
@@ -66,7 +66,7 @@ const HeaderPanel = ({signOutStart, usersData, isDataLoaded, currentUser}) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser,
+    currentUserName: selectCurrentUserName,
     usersData: selectUsersData,
     isDataLoaded: selectIsDataLoaded
 });
