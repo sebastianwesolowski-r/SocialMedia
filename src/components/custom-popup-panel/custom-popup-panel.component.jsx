@@ -38,10 +38,11 @@ const CustomPopupPanel = ({items, type}) => {
                         }
                     </div>
                 );
-            case 'Setting':
+            case 'Settings':
                 return (
-                    <div>
-
+                    <div className="settings">
+                        <div className="settings-item">Change Password</div>
+                        <div className="settings-item">Delete Account</div>
                     </div>
                 );
             default:

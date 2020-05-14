@@ -23,6 +23,7 @@ export function* uploadPost({payload: {postMessage, currentUserName, postImage}}
     try {
         if(postImage) {
             if (postImage.size > 5000000) {
+                alert('Image size is too big');
                 throw new Error('Image size is too big');
             }
             yield storage.ref(`postImages/${postImage.name}`).put(postImage);

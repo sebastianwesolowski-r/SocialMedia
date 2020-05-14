@@ -2,13 +2,11 @@ import React from 'react';
 
 import {ReactComponent as Close} from '../../assets/close.svg';
 
-import CustomPopupPanel from '../custom-popup-item/custom-popup-panel.component';
+import CustomPopupPanel from '../custom-popup-panel/custom-popup-panel.component';
 
 import './custom-popup.styles.scss';
 
 const CustomPopup = ({type, items, setHidden, overlayNone}) => {
-    //let keyCount = 0;
-    //const getKey = () => keyCount++;
     return(
         <div className={`${overlayNone ? 'overlay-none' : ""} overlay`}>
             <div className="popup">

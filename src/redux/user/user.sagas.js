@@ -85,6 +85,13 @@ export function* signOut() {
 
 export function* signUp({payload: {displayName, email, password}}) {
     try {
+        const users = yield firestore.collection('users');
+        const usersSnapshot = yield users.get();
+        const userExists = yield usersSnapshot.docs.find(doc => doc.data().displayName === displayName);
+        if(userExists) {
+            alert('This DisplayName is already taken');
+            throw new Error('This DisplayName is already taken');
+        }
         const {user} = yield auth.createUserWithEmailAndPassword(email, password);
         yield put(signUpSuccess({user, additionalData: {displayName}}));
     } catch (error) {

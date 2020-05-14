@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
+
+import {ReactComponent as Settings} from '../../assets/settings.svg';
 
 import {selectCurrentUser} from '../../redux/user/user.selectors';
 import {selectUserProfile} from '../../redux/users/users.selectors';
@@ -7,21 +10,24 @@ import {selectUserPosts} from '../../redux/posts/posts.selectors';
 
 import Loader from '../loader/loader.component';
 import ProfilePanelItem from '../profile-panel-item/profile-panel-item.component';
-import BackButton from '../back-button/back-button.component';
+import CustomButton from '../custom-button/custom-button.component';
 import FollowButton from '../follow-button/follow-button.component';
 import ProfilePosts from '../profile-posts/profile-posts.component';
 import Followers from '../followers/followers.component';
 import Following from '../following/following.component';
+import CustomPopup from '../custom-popup/custom-popup.component';
 
 import './profile.styles.scss';
 
 const Profile = ({user, currentUser, userposts}) => {
+    const [popup, setPopup] = useState(false);
     const userFollowers = user.followers;
     const userFollowing = user.following;
     const postsCount = userposts.length;
     const followersCount = user.followers.length;
     const followingCount = user.following.length;
     const [profileContent, setContent] = useState('posts');
+    const setHidden = () => setPopup(!popup);
     const renderSwitch = (profileContent) => {
         switch(profileContent) {
             case 'posts': 
@@ -39,7 +45,7 @@ const Profile = ({user, currentUser, userposts}) => {
             default:
                 return (
                     <ProfilePosts />
-                )
+                );
         }
     }
 
@@ -51,8 +57,10 @@ const Profile = ({user, currentUser, userposts}) => {
                         <div className="profile">
                             <div className="profile-name">{user.displayName}</div>
                             {
-                                currentUser.id !== user.id && (
+                                currentUser.id !== user.id ? (
                                     <FollowButton currentUserName={currentUser.displayName} user={user}/>
+                                ) : (
+                                    <Settings className="settings" onClick={() => setHidden()}/>
                                 )
                             }
                             <div className="profile-panel">
@@ -66,11 +74,20 @@ const Profile = ({user, currentUser, userposts}) => {
                                 }
                             </div>
                         </div>
-                        <BackButton />
+                        <Link to="/feed">
+                            <CustomButton>
+                                    <div>back</div>
+                            </CustomButton>
+                        </Link>
                     </div>
                 ) : (
                     <Loader />
                 )
+            }
+            {
+                popup ? (
+                    <CustomPopup type={'Settings'} items={null} setHidden={setHidden} />
+                ) : null
             }
         </div>
     );

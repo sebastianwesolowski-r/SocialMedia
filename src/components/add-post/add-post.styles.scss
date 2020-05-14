@@ -7,24 +7,26 @@
     height: calc(100% - 70px);
     background-color: rgba(0,0,0,0.3);
     backdrop-filter: blur(2px);
+    z-index: 10;
     .add-post-panel {
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 620px;
-        height: 220px;
+        height: 200px;
         background-color: #FAFAFA;
         font-family: 'Roboto';
         font-size: 25px;
         color: #6B6B6B;
         margin-top: 100px;
         padding-top: 10px;
-        padding-bottom: 20px;
+        //padding-bottom: 20px;
         margin-bottom: 15px;
         .close {
-            position: relative;
-            top: 5%;
-            left: 45%;
+            position: absolute;
+            top: 15px;
+            right: 20px;
             margin-left: 0px;
             background: none;
             border: none;

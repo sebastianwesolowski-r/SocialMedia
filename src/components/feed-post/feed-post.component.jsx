@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 import {selectCurrentUserName} from '../../redux/user/user.selectors';
 import {selectPostLikes, selectPostComments} from '../../redux/posts/posts.selectors';
 import {likePost, dislikePost, commentPost} from '../../redux/posts/posts.actions';
-
-import {Link} from 'react-router-dom';
 
 import {ReactComponent as ProfileIcon} from '../../assets/profile-icon.svg';
 import {ReactComponent as Likes} from '../../assets/likes-feed.svg';
@@ -18,9 +17,8 @@ import CustomPopup from '../custom-popup/custom-popup.component';
 import './feed-post.styles.scss';
 
 const FeedPost = ({post, currentUserName, likePost, dislikePost, commentPost, postLikes, postComments}) => {
-    const {uploadedBy, image, message, createdAt} = post;
+    const {uploadedBy, image, message} = post;
     const postId = post.id;
-
     const [comment, setComment] = useState('');
     const [popup, setPopup] = useState(false);
     const [popupType, setPopupType] = useState('');
