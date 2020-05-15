@@ -14,7 +14,7 @@ import {ReactComponent as SignOut} from '../../assets/signout.svg'
 import AppBaner from '../app-baner/app-baner.component';
 import AddPost from '../add-post/add-post.component';
 import SearchBox from '../search-box/search-box.component';
-import SearchUserItem from '../search-user-item/search-user-item.component';
+import SearchBoxItem from '../search-box-item/search-box-item.component';
 import UserPanelItem from '../user-panel-item/user-panel-item.component';
 
 import './header-panel.styles.scss';
@@ -50,7 +50,7 @@ const HeaderPanel = ({signOutStart, usersData, isDataLoaded, currentUserName}) =
                         <div className="filtered-users">
                             {
                                 filteredUsers.map(user => (
-                                    <SearchUserItem key={getKey()} userName={user} />
+                                    <SearchBoxItem key={getKey()} userName={user} />
                                 ))
                             }
                         </div>

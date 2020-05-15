@@ -7,7 +7,6 @@
     width: 100%;
     height: fit-content;
     font-size: 17px;
-    color: #000000;
     padding: 20px 0;
     overflow-wrap: break-word;
     overflow-y: auto;
@@ -26,12 +25,5 @@
             font-weight: 300;
             margin-left: 5px;
         }
-    }
-    .settings {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        height: 60px;
     }
 }

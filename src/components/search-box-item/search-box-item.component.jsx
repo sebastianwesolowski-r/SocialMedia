@@ -2,11 +2,11 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import './search-user-item.styles.scss';
+import './search-box-item.styles.scss';
 
-const SearchUserItem = ({userName}) => {
+const SearchBoxItem = ({userName}) => {
     return (
-        <div className="search-user-item">
+        <div className="search-box-item">
             <Link to={`/profile/${userName}`}>
                 {userName}
             </Link>
@@ -14,4 +14,4 @@ const SearchUserItem = ({userName}) => {
     );
 };
 
-export default SearchUserItem;
+export default SearchBoxItem;

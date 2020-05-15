@@ -2,6 +2,8 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
+import ProfileSettings from '../profile-settings/profile-settings.component';
+
 import './custom-popup-panel.styles.scss';
 
 const CustomPopupPanel = ({items, type}) => {
@@ -40,10 +42,7 @@ const CustomPopupPanel = ({items, type}) => {
                 );
             case 'Settings':
                 return (
-                    <div className="settings">
-                        <div className="settings-item">Change Password</div>
-                        <div className="settings-item">Delete Account</div>
-                    </div>
+                    <ProfileSettings />
                 );
             default:
                 return (

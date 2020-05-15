@@ -52,6 +52,34 @@ export const getCurrentUser = () => {
     });
 };
 
+export const changeUserPassword = (presentPassword, newPassword) => {
+    const user = firebase.auth().currentUser;
+    const credential = firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        presentPassword
+    );
+    user.reauthenticateWithCredential(credential)
+    .then(() => {
+        user.updatePassword(newPassword);
+        alert('Password updated successfully');
+    })
+    .catch(error => alert(error.message));
+};
+
+export const deleteUserAccount = presentPassword => {
+    const user = firebase.auth().currentUser;
+    const credential = firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        presentPassword
+    );
+    user.reauthenticateWithCredential(credential)
+    .then(() => {
+        user.delete();
+        alert('Account deleted successfully');
+    })
+    .catch(error => alert(error.message))
+};
+
 export const convertUsersSnapshotToMap = users => {
     const transformedUsers = users.docs.map(doc => {
         const {displayName, followers, following} = doc.data();

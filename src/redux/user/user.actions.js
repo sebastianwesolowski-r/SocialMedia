@@ -51,6 +51,11 @@ export const signUpFailure = error => ({
     payload: error
 });
 
+export const deleteUserStart = userData => ({
+    type: UserActionTypes.DELETE_USER_START,
+    payload: userData
+});
+
 export const userIsNull = () => ({
     type: UserActionTypes.USER_IS_NULL
 });

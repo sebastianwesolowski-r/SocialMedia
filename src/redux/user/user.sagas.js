@@ -2,11 +2,11 @@ import {takeLatest, put, all, call} from 'redux-saga/effects';
 
 import UserActionTypes from './user.types';
 
-import {signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, userIsNull} from './user.actions';
+import {signInSuccess, signInFailure, signOutStart, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, userIsNull} from './user.actions';
 
 import {fetchUsersStart} from '../users/users.actions';
 
-import {auth, googleProvider, firestore ,createUserProfile, getCurrentUser} from '../../firebase/firebase';
+import {auth, googleProvider, firestore ,createUserProfile, getCurrentUser, deleteUserAccount} from '../../firebase/firebase';
 import firebase from '../../firebase/firebase';
 
 export function* followUser({payload: {user, currentUserData}}) {
@@ -49,6 +49,7 @@ export function* signInWithGoogle() {
         yield getSnapshotFromUser(user);
     } catch (error) {
         yield put(signInFailure(error));
+        yield alert(error.message);
     }
 }
 
@@ -58,6 +59,7 @@ export function* signInWithEmail({payload: {email, password}}) {
         yield getSnapshotFromUser(user);
     } catch(error) {
         yield put(signInFailure(error));
+        yield alert(error.message);
     }
 }
 
@@ -96,6 +98,17 @@ export function* signUp({payload: {displayName, email, password}}) {
         yield put(signUpSuccess({user, additionalData: {displayName}}));
     } catch (error) {
         yield put(signUpFailure(error));
+        yield alert(error.message);
+    }
+}
+
+export function* deleteUser({payload: {presentPassword, currentUserId}}) {
+    try {
+        yield call(deleteUserAccount, presentPassword);
+        yield firestore.doc(`users/${currentUserId}`).delete();
+        yield put(signOutStart());
+    } catch(error) {
+        alert(error.message);
     }
 }
 
@@ -127,6 +140,10 @@ export function* onSignUpSuccess() {
     yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
 }
 
+export function* onUserDeleteStart() {
+    yield takeLatest(UserActionTypes.DELETE_USER_START, deleteUser);
+}
+
 export function* onUserFollow() {
     yield takeLatest(UserActionTypes.FOLLOW_USER, followUser);
 }
@@ -136,5 +153,5 @@ export function* onUserUnfollow() {
 }
 
 export function* userSagas() {
-    yield all([call(onGoogleSignInStart), call(onEmailSignInStart), call(onCheckUserSession), call(onSignOutStart), call(onSignUpStart), call(onSignUpSuccess), call(onUserFollow), call(onUserUnfollow)]);
+    yield all([call(onGoogleSignInStart), call(onEmailSignInStart), call(onCheckUserSession), call(onSignOutStart), call(onSignUpStart), call(onSignUpSuccess), call(onUserFollow), call(onUserUnfollow), call(onUserDeleteStart)]);
 }
