@@ -40,3 +40,12 @@
         }
     }
 }
+
+@media (max-width: 800px) {
+    .group {
+        .form-input {
+            width: 75vw;
+            max-width: 390px;
+        }
+    }
+}

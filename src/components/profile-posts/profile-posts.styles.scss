@@ -12,3 +12,18 @@
         max-width: 248.45px;
     }
 }
+
+@media (max-width: 800px) {
+    .posts {
+        height: fit-content;
+        flex-direction: column;
+        align-items: center;
+        justify-content: unset;
+        flex-wrap: unset;
+        &::after {
+            content: unset;
+            flex: unset;
+            max-width: unset;
+        }
+    }
+}

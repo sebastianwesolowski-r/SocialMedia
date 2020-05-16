@@ -10,6 +10,7 @@
     color: map_get($colors, "dark");
     background-color: map_get($colors, "post_background");
     border: 1px solid map_get($colors, "border");
+    margin-bottom: 30px;
     .uploaded-by {
         display: flex;
         align-items: center;
@@ -74,6 +75,17 @@
         }
         svg {
             cursor: pointer;
+        }
+    }
+}
+
+@media (max-width: 800px) {
+    .feed-post {
+        .image {
+            height: 330px;
+        }
+        .post-stats {
+            height: 35px;
         }
     }
 }

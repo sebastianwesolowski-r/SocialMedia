@@ -8,6 +8,7 @@ import {ReactComponent as LikesProfile} from '../../assets/likes-profile.svg';
 import {ReactComponent as LikedProfile} from '../../assets/liked-profile.svg';
 import {ReactComponent as CommentsProfile} from '../../assets/comments-profile.svg'; 
 
+import Overlay from '../overlay/overlay.component';
 import PostPopup from '../post-popup/post-popup.component';
 
 import './profile-posts-item.styles.scss';
@@ -36,7 +37,9 @@ const ProfilePostsItem = ({userpost, postLikes, postComments, currentUserName}) 
             </div>
             {
                 popup ? (
-                    <PostPopup userpost={userpost} postLikes={postLikes} postComments={postComments} showPopup={showPopup}/>
+                    <Overlay>
+                        <PostPopup userpost={userpost} postLikes={postLikes} postComments={postComments} showPopup={showPopup}/>
+                    </Overlay>
                 ) : null
             }
         </div>

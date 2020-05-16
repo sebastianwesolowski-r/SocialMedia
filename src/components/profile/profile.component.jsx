@@ -13,11 +13,11 @@ import ProfilePanelItem from '../profile-panel-item/profile-panel-item.component
 import CustomButton from '../custom-button/custom-button.component';
 import FollowButton from '../follow-button/follow-button.component';
 import ProfilePosts from '../profile-posts/profile-posts.component';
-import Followers from '../followers/followers.component';
-import Following from '../following/following.component';
+import Follows from '../follows/follows.component';
 import CustomPopup from '../custom-popup/custom-popup.component';
 
 import './profile.styles.scss';
+import Overlay from '../overlay/overlay.component';
 
 const Profile = ({user, currentUser, userposts}) => {
     const [popup, setPopup] = useState(false);
@@ -36,11 +36,11 @@ const Profile = ({user, currentUser, userposts}) => {
                 );
             case 'followers':
                 return (
-                    <Followers followers={userFollowers}/>
+                    <Follows follows={userFollowers}/>
                 );
             case 'following':
                 return (
-                    <Following following={userFollowing}/>
+                    <Follows follows={userFollowing}/>
                 );
             default:
                 return (
@@ -86,7 +86,9 @@ const Profile = ({user, currentUser, userposts}) => {
             }
             {
                 popup ? (
-                    <CustomPopup type={'Settings'} items={null} setHidden={setHidden} />
+                    <Overlay>
+                        <CustomPopup type={'Settings'} items={null} setHidden={setHidden} />
+                    </Overlay>
                 ) : null
             }
         </div>

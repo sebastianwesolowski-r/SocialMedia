@@ -1,15 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-import './user-panel-item.styles.scss';
+import './hamburger-menu-item.styles.scss';
 
-const UserPanelItem = ({url, panelFunction, icon, onClickFunction}) => {
+const HamburgerMenuItem = ({url, panelFunction, icon, onClickFunction, setHamburgerMenu}) => {
     const item = (
-        <div className="user-panel-item">
-            <div className="icon">{icon}</div>
+        <div className="hamburger-menu-item" onClick={() => setHamburgerMenu()}>
+            <div>{icon}</div>
             <div className="panel-function">{panelFunction}</div>
         </div>
-    )
+    );
     return (
         <div>
         {
@@ -25,6 +25,6 @@ const UserPanelItem = ({url, panelFunction, icon, onClickFunction}) => {
         }
         </div>
     );
-};
+}
 
-export default UserPanelItem;
+export default HamburgerMenuItem;

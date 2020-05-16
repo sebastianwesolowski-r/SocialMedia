@@ -1,15 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-import './following.styles.scss';
+import './follows.styles.scss';
 
-const Following = ({following}) => {
+const Follows = ({follows}) => {
     let keyCount = 0;
     const getKey = () => keyCount++;
     return (
-        <div className="following">
+        <div className="follows">
             {
-                following.map(follow => (
+                follows.map(follow => (
                     <div className="follow" key={getKey()}>
                         <Link to={`/profile/${follow}`}>
                             {follow}
@@ -22,4 +22,4 @@ const Following = ({following}) => {
 };
 
 
-export default Following;
+export default Follows;

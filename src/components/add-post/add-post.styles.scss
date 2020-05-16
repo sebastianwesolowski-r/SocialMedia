@@ -1,62 +1,69 @@
-.add-post-page {
+.add-post-panel {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: absolute;
-    width: 100%;
-    height: calc(100% - 70px);
-    background-color: rgba(0,0,0,0.3);
-    backdrop-filter: blur(2px);
-    z-index: 10;
-    .add-post-panel {
-        position: relative;
+    width: 620px;
+    height: 200px;
+    background-color: #FAFAFA;
+    font-family: 'Roboto';
+    font-size: 25px;
+    color: #6B6B6B;
+    margin-top: 100px;
+    padding-top: 10px;
+    margin-bottom: 15px;
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        margin-left: 0px;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    form {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 620px;
-        height: 200px;
-        background-color: #FAFAFA;
-        font-family: 'Roboto';
-        font-size: 25px;
-        color: #6B6B6B;
-        margin-top: 100px;
-        padding-top: 10px;
-        //padding-bottom: 20px;
-        margin-bottom: 15px;
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            margin-left: 0px;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .post-message {
-            width: 600px;
-            height: 35px;
-            border: 1px solid #696969;
+    }
+    .post-message {
+        width: 600px;
+        height: 35px;
+        border: 1px solid #696969;
+        font-size: 19px;
+        margin-top: 20px;
+        padding-left: 10px;
+        &::placeholder {
             font-size: 19px;
-            margin-top: 20px;
-            padding-left: 10px;
-            &::placeholder {
-                font-size: 19px;
+        }
+    }
+    .imageupload {
+        align-items: flex-start;
+        width: 600px;
+        font-size: 19px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        padding-left: 10px;
+        input {
+            margin-left: 15px
+        }
+    }
+}
+
+
+@media (max-width: 800px) {
+    .add-post-page {
+        .add-post-panel {
+            width: 90%;
+            height: 220px;
+            .post-message {
+                width: 95%;
             }
-        }
-        .imageupload {
-            align-items: flex-start;
-            width: 600px;
-            font-size: 19px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            padding-left: 10px;
-            input {
-                margin-left: 15px
+            .imageupload {
+                width: 95%;
+                input {
+                    margin: 0;
+                }
             }
         }
     }

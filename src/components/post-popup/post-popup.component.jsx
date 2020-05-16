@@ -14,6 +14,7 @@ import {ReactComponent as Liked} from '../../assets/liked.svg';
 import {ReactComponent as Comments} from '../../assets/comments-feed.svg';
 import {ReactComponent as UploadComment} from '../../assets/upload-comment.svg';
 
+import Overlay from '../overlay/overlay.component';
 import CustomPopup from '../custom-popup/custom-popup.component';
 
 import './post-popup.styles.scss';
@@ -30,7 +31,7 @@ const PostPopup = ({userpost, currentUserName, postLikes, postComments, likePost
         setComment(event.target.value);
     }
     return (
-        <div className="overlay">
+        <div>
             <div className="post-popup">
                 <div className="image-section" style={{backgroundImage: `url(${image})`}}>
                     <div className="message-overlay">
@@ -88,7 +89,9 @@ const PostPopup = ({userpost, currentUserName, postLikes, postComments, likePost
             </div>
             {
                 popup ? (
-                    <CustomPopup type={'Likes'} items={postLikes} setHidden={setHidden} overlayNone={true}/>
+                    <Overlay overlayNone={true}>
+                        <CustomPopup type={'Likes'} items={postLikes} setHidden={setHidden}/>
+                    </Overlay>
                 ) : null
             }
         </div>

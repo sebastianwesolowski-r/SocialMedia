@@ -13,6 +13,8 @@ import LandingPage from './pages/landing-page/landing-page.component';
 import FeedPage from './pages/feed-page/feed-page.component';
 import ProfilePage from './pages/profile-page/profile-page.component';
 
+import ErrorBoundary from './components/error-boundary/error-boundary.component';
+
 import './App.css';
 
 function App({checkUserSession, access}) {
@@ -21,7 +23,7 @@ function App({checkUserSession, access}) {
   }, [checkUserSession]);
 
   return (
-    <div className="app">
+    <div>
       {
         access ? (
           <HeaderPanel />
@@ -29,21 +31,23 @@ function App({checkUserSession, access}) {
           <Header />
         )
       }
-      <Switch>
-        <Route exact path="/" render={() => access ? (
-            <Redirect to="/feed" />
-          ) : (
-            <LandingPage />
-          )
-        } />
-        <Route path="/feed" render={() => access ? (
-            <FeedPage />
-          ) : (
-            <Redirect to="/" />
-          )
-        } />
-        <Route path="/profile" component={ProfilePage}/>
-      </Switch>
+      <ErrorBoundary>
+        <Switch>
+          <Route exact path="/" render={() => access ? (
+              <Redirect to="/feed" />
+            ) : (
+              <LandingPage />
+            )
+          } />
+          <Route path="/feed" render={() => access ? (
+              <FeedPage />
+            ) : (
+              <Redirect to="/" />
+            )
+          } />
+          <Route path="/profile" component={ProfilePage}/>
+        </Switch>
+    </ErrorBoundary>
     </div>
   );
 }

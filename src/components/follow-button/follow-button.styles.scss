@@ -21,4 +21,19 @@
         background-color: map_get($colors, "light");
         border: 1px solid map_get($colors, "dark");
     }
+    .follow, .unfollow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media (max-width: 800px) {
+    .follow-button {
+        top: 55px;
+        right: 5px;
+        width: 31%;
+    }
 }

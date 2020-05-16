@@ -12,6 +12,7 @@ import {ReactComponent as Liked} from '../../assets/liked.svg';
 import {ReactComponent as Comments} from '../../assets/comments-feed.svg';
 import {ReactComponent as UploadComment} from '../../assets/upload-comment.svg';
 
+import Overlay from '../overlay/overlay.component';
 import CustomPopup from '../custom-popup/custom-popup.component';
 
 import './feed-post.styles.scss';
@@ -56,7 +57,9 @@ const FeedPost = ({post, currentUserName, likePost, dislikePost, commentPost, po
                 </div>
                 {
                     popup ? (
-                        <CustomPopup type={popupType} items={popupItems} setHidden={setHidden} />
+                        <Overlay>
+                            <CustomPopup type={popupType} items={popupItems} setHidden={setHidden} />
+                        </Overlay>
                     ) : null
                 }
             </div>

@@ -28,7 +28,7 @@ const AddPost = ({setHidden, currentUserName, uploadPostStart, isUpdating}) => {
     };
 
     return (
-        <div className="add-post-page">
+        <div className="e">
             <div className="add-post-panel">
                 <Close className="close" onClick={() => setHidden()}/>
                 <div>Add Post</div>
