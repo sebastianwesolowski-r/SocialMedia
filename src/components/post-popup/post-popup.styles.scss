@@ -130,34 +130,32 @@
 
 
 @media (max-width: 800px) {
-    .overlay {
-        .post-popup {
-            width: 95%;
-            margin-top: 100px;
-            .image-section {
-                width: 55%;
-            }
-            .user-section {
-                width: 45%;
-                .author {
-                    .author-username {
-                        width: 50%;
-                        font-size: 14px;
-                        span {
-                            margin-left: 5px;
-                        }
-                    }
-                }
-                .comments {
+    .post-popup {
+        width: 98vw;
+        margin-top: 100px;
+        .image-section {
+            width: 55%;
+        }
+        .user-section {
+            width: 45%;
+            .author {
+                .author-username {
+                    width: 50%;
                     font-size: 14px;
-                }
-                .post-stats {
-                    padding: 0 15px;
-                }
-                .upload-comment {
-                    input {
-                        font-size: 14px;
+                    span {
+                        margin-left: 5px;
                     }
+                }
+            }
+            .comments {
+                font-size: 14px;
+            }
+            .post-stats {
+                padding: 0 15px;
+            }
+            .upload-comment {
+                input {
+                    font-size: 14px;
                 }
             }
         }
