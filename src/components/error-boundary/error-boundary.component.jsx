@@ -1,5 +1,7 @@
 import React from 'react';
 
+import NotFound from '../../pages/notfound/notfound.component';
+
 import './error-boundary.styles.scss';
 
 class ErrorBoundary extends React.Component {
@@ -10,7 +12,7 @@ class ErrorBoundary extends React.Component {
         }
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError() {
         return {
             hasError: true
         }
@@ -23,7 +25,7 @@ class ErrorBoundary extends React.Component {
     render() {
         if(this.state.hasError) {
             return (
-                <div className="error-boundary">404 Sorry We Cannot Load This Page</div>
+                <NotFound />
             )
         }
         return this.props.children

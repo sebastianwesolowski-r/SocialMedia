@@ -12,6 +12,7 @@ import HeaderPanel from './components/header-panel/header-panel.component';
 import LandingPage from './pages/landing-page/landing-page.component';
 import FeedPage from './pages/feed-page/feed-page.component';
 import ProfilePage from './pages/profile-page/profile-page.component';
+import NotFound from './pages/notfound/notfound.component';
 
 import ErrorBoundary from './components/error-boundary/error-boundary.component';
 
@@ -46,6 +47,7 @@ function App({checkUserSession, access}) {
             )
           } />
           <Route path="/profile" component={ProfilePage}/>
+          <Route component={NotFound} />
         </Switch>
     </ErrorBoundary>
     </div>
