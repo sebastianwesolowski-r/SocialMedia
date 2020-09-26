@@ -1,18 +1,9 @@
 import React from 'react';
 
-import './form-input.styles.scss';
+import {TextField} from '@material-ui/core';
 
-const FormInput = ({handleChange, label, ...otherProps}) => (
-    <div className="group">
-        <input className="form-input" onChange={handleChange} {...otherProps}/>
-        {
-            label ? (
-                <label className={`${otherProps.value.length ? 'shrink' : ''} form-input-label`}>
-                    {label}
-                </label>
-            ) : null
-        }
-    </div>
+const FormInput = ({handleChange, label, smallMargin, ...otherProps}) => (
+    <TextField fullWidth onChange={handleChange} label={<span style={{fontSize: "1rem", color: "#333333"}}>{label}</span>} {...otherProps} style={{marginBottom: smallMargin ? "30px" : "45px"}} />
 );
 
 export default FormInput;

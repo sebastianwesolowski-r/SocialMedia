@@ -24,33 +24,29 @@ function App({checkUserSession, access}) {
   }, [checkUserSession]);
 
   return (
-    <div>
+    <>
       {
         access ? (
-          <HeaderPanel />
-        ) : (
           <Header />
-        )
+        ) : null
       }
-      <ErrorBoundary>
-        <Switch>
-          <Route exact path="/" render={() => access ? (
-              <Redirect to="/feed" />
-            ) : (
-              <LandingPage />
-            )
-          } />
-          <Route path="/feed" render={() => access ? (
-              <FeedPage />
-            ) : (
-              <Redirect to="/" />
-            )
-          } />
-          <Route path="/profile" component={ProfilePage}/>
-          <Route component={NotFound} />
-        </Switch>
-    </ErrorBoundary>
-    </div>
+      <Switch>
+        <Route exact path="/" render={() => access ? (
+            <Redirect to="/feed" />
+          ) : (
+            <LandingPage />
+          )
+        } />
+        <Route path="/feed" render={() => access ? (
+            <FeedPage />
+          ) : (
+            <Redirect to="/" />
+          )
+        } />
+        <Route path="/profile" component={ProfilePage}/>
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 

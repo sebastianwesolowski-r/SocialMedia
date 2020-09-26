@@ -2,17 +2,53 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 
+import {ReactComponent as Enter} from '../../assets/enter.svg';
+import {ReactComponent as FbLogin} from '../../assets/fb-login.svg';
+import {ReactComponent as GoogleLogin} from '../../assets/google-login.svg';
+
+import {Box, Typography, Button, FormControlLabel, Checkbox} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
+
 import {googleSignInStart, emailSignInStart} from '../../redux/user/user.actions';
 import {selectIsProcessing} from '../../redux/user/user.selectors';
 
 import FormInput from '../form-input/form-input.component';
-import CustomButton from '../custom-button/custom-button.component';
-import {ReactComponent as Enter} from '../../assets/enter.svg';
 import Spinner from '../spinner/spinner.component';
 
-import './sign-in.styles.scss';
+const useStyles = makeStyles({
+    panelForm: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+        paddingTop: "50px"
+    },
+    signBtn: {
+        width: "95px",
+        height: "35px"
+    },
+    signCheckbox: {
+        fontSize: "0.9rem",
+        color: "555555"
+    },
+    signInMediaButton: {
+        width: "130px",
+        height: "40px",
+        color: "#FAFAFA",
+        marginBottom: "15px",
+        borderRadius: "20px",
+        textTransform: "none"
+    },
+    signSwitch: {
+        textAlign: "center",
+        color: "#333333",
+        marginTop: "45px",
+        fontWeight: "500"
+    }
+});
 
 const SignIn = ({doesUserHaveAnAccount, googleSignInStart, emailSignInStart, isProcessing}) => {
+    const classes = useStyles();
     const [userData, setUserData] = useState({email: '', password: ''});
     const {email, password} = userData;
 
@@ -27,30 +63,38 @@ const SignIn = ({doesUserHaveAnAccount, googleSignInStart, emailSignInStart, isP
     }
 
     return (
-        <div className="sign-in-page">
-            <div className="page-title">Sign in</div>
-            <form onSubmit={handleSubmit}>
-                <FormInput name="email" type="email" label="Email" value={email} onChange={handleChange} required/>
-                <FormInput name="password" type="password" label="Password" value={password} onChange={handleChange} required/>
-                <div className="buttons">
-                    <CustomButton type="submit">
-                        {
-                            isProcessing ? (
-                                <Spinner />
-                            ) : (
-                                <Enter />
-                            )
+        <>
+            <Box display="flex" flexDirection="column" alignItems="center" width="420px" height="500px" borderRadius="5px" boxShadow={7} marginTop="50px" padding="0 30px">
+                <Box display="flex" alignItems="center" justifyContent="center" width="420px" height="60px" borderRadius="5px 5px 0 0" bgcolor="primary.main"><Typography variant="h5">Sign in</Typography></Box>
+                <form className={classes.panelForm} onSubmit={handleSubmit}>
+                    <FormInput name="email" type="email" label="Email" value={email} onChange={handleChange} required/>
+                    <FormInput name="password" type="password" label="Password" value={password} onChange={handleChange} required/>
+                    <Box display="flex" alignItems="flex-start" justifyContent="space-between" width="100%">
+                        <FormControlLabel control={
+                            <Checkbox color="primary" />
                         }
-                    </CustomButton>
-                    <CustomButton type="button" onClick={googleSignInStart} googleSignIn>Sign in with Google</CustomButton>
-                </div>
-            </form>
-            <div className="switch-sign-up">
-                <div>or</div>
-                <div className="space">if you don't have an account</div>
-                <CustomButton onClick={doesUserHaveAnAccount}>Sign up</CustomButton>
+                        label={<span className={classes.signCheckbox}>Remember me</span>}
+                        />
+                        <Button className={classes.signBtn} variant="contained" color="primary" type="submit">
+                            {
+                                isProcessing ? (
+                                    <Spinner />
+                                ) : (
+                                    <Enter />
+                                )
+                            }
+                        </Button>
+                    </Box>
+                </form>
+                <Typography variant="subtitle2" style={{marginTop: "10px", marginBottom: "15px"}}>or with</Typography>
+                <Button className={classes.signInMediaButton} variant="contained" startIcon={<FbLogin />} style={{backgroundColor: "#285080"}}>Facebook</Button>
+                <Button onClick={() => googleSignInStart()} className={classes.signInMediaButton} variant="contained" startIcon={<GoogleLogin />} style={{backgroundColor: "#CA4939"}}>Google</Button>
+            </Box>
+            <div className={classes.signSwitch}>
+                <p style={{fontSize: "1rem", marginBottom: "5px", letterSpacing: "0.4px"}}>Don’t have an account ?</p>
+                <Typography variant="subtitle2"><span onClick={() => doesUserHaveAnAccount()} style={{textDecoration: "underline", fontSize: "0.9rem", color: "#333333", cursor: "pointer"}}>Sign up</span> to access all the features of service.</Typography>
             </div>
-        </div>
+        </>
     );
 };
 
