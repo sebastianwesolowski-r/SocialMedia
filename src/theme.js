@@ -20,6 +20,10 @@ const theme = createMuiTheme({
         fontSize: "1.8rem",
         color: "#FAFAFA"
       },
+      h6: {
+        fontSize: "1.5rem",
+        letterSpacing: "0.3px"
+      },
       subtitle1: {
           fontFamily: "'Poppins', sans-serif",
           fontWeight: "500"
