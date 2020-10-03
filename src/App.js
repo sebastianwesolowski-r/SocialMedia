@@ -3,18 +3,19 @@ import {connect} from 'react-redux';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import {createStructuredSelector} from 'reselect';
 
-import {selectAccess} from './redux/user/user.selectors';
-import {checkUserSession} from './redux/user/user.actions';
-
 import Header from './components/header/header.component';
-import HeaderPanel from './components/header-panel/header-panel.component';
+import ErrorBoundary from './components/error-boundary/error-boundary.component';
 
 import LandingPage from './pages/landing-page/landing-page.component';
 import FeedPage from './pages/feed-page/feed-page.component';
 import ProfilePage from './pages/profile-page/profile-page.component';
 import NotFound from './pages/notfound/notfound.component';
 
-import ErrorBoundary from './components/error-boundary/error-boundary.component';
+import AuthenticatedRoute from './custom-routes/authenticated-route';
+import UnauthenticatedRoute from './custom-routes/unauthenticated-route';
+
+import {selectAccess} from './redux/user/user.selectors';
+import {checkUserSession} from './redux/user/user.actions';
 
 import './App.css';
 
@@ -31,19 +32,21 @@ function App({checkUserSession, access}) {
         ) : null
       }
       <Switch>
-        <Route exact path="/" render={() => access ? (
-            <Redirect to="/feed" />
-          ) : (
-            <LandingPage />
-          )
-        } />
-        <Route path="/feed" render={() => access ? (
-            <FeedPage />
-          ) : (
-            <Redirect to="/" />
-          )
-        } />
-        <Route path="/profile" component={ProfilePage}/>
+        <UnauthenticatedRoute
+          exact path="/"
+          component={LandingPage}
+          appProps={{access}}
+        />
+        <AuthenticatedRoute
+          exact path="/feed"
+          component={FeedPage}
+          appProps={{access}}
+        />
+        <AuthenticatedRoute
+          path={"/profile"}
+          component={ProfilePage}
+          appProps={{access}}
+        />
         <Route component={NotFound} />
       </Switch>
     </>

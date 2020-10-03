@@ -63,8 +63,8 @@ const SignUp = ({doesUserHaveAnAccount, signUpStart, isProcessing}) => {
 
     return (
         <>
-            <Box display="flex" flexDirection="column" alignItems="center" width="420px" height="500px" borderRadius="5px" boxShadow={7} marginTop="50px" padding="0 30px">
-                <Box display="flex" alignItems="center" justifyContent="center" width="420px" height="60px" borderRadius="5px 5px 0 0" bgcolor="primary.main"><Typography variant="h5">Sign up</Typography></Box>
+            <Box display="flex" flexDirection="column" alignItems="center" width="460px" height="500px" borderRadius="5px" boxShadow={7} marginTop="50px" padding="0 50px">
+                <Box display="flex" alignItems="center" justifyContent="center" width="460px" height="60px" borderRadius="5px 5px 0 0" bgcolor="primary.main"><Typography variant="h5">Sign up</Typography></Box>
                 <form className={classes.panelForm} onSubmit={handleSubmit}>
                     <FormInput name="displayName" type="text" label="Display Name" value={displayName} onChange={handleChange} smallMargin required/>
                     <FormInput name="email" type="email" label="Email" value={email} onChange={handleChange} smallMargin required/>
@@ -76,7 +76,7 @@ const SignUp = ({doesUserHaveAnAccount, signUpStart, isProcessing}) => {
                             }
                             label={<span className={classes.signCheckbox}>I agree <span style={{textDecoration: "underline"}}>Terms and Conditions</span></span>}
                             />
-                        <Button className={classes.signBtn} variant="contained" color="primary" type="submit">
+                        <Button className={classes.signBtn} variant="contained" color="primary" type="submit" disabled={isProcessing}>
                             {
                                 isProcessing ? (
                                     <Spinner />
@@ -90,7 +90,7 @@ const SignUp = ({doesUserHaveAnAccount, signUpStart, isProcessing}) => {
             </Box>
             <div className={classes.signSwitch}>
                 <p style={{fontSize: "1rem", marginBottom: "5px", letterSpacing: "0.4px"}}>Already have an account ?</p>
-                <Typography variant="subtitle2"><span onClick={() => doesUserHaveAnAccount()} style={{textDecoration: "underline", fontSize: "0.9rem", color: "#333333", cursor: "pointer"}}>Sign in</span> to access all the features of service.</Typography>
+                <Typography variant="subtitle2" color="#555555"><span onClick={() => doesUserHaveAnAccount()} style={{textDecoration: "underline", fontSize: "0.9rem", color: "#333333", cursor: "pointer"}}>Sign in</span> to access all the features of service.</Typography>
             </div>
         </>
     );

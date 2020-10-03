@@ -69,8 +69,8 @@ const Header = ({currentUserName, signOut, history}) => {
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [tabsValue, setTabsValue] = useState(0);
 
-    const handleClick = e => setMenuAnchor(e.currentTarget);
-    const handleClose = () => setMenuAnchor(null);
+    const handleMenuClick = e => setMenuAnchor(e.currentTarget);
+    const handleMenuClose = () => setMenuAnchor(null);
 
     const handleTabsChange = (e, newValue) => setTabsValue(newValue);
 
@@ -91,11 +91,11 @@ const Header = ({currentUserName, signOut, history}) => {
                     <Tabs value={tabsValue} onChange={handleTabsChange} style={{marginLeft: "auto"}} indicatorColor="primary">
                         <Tab classes={{root: classes.tab}} label={<HomeIcon />} onClick={() => history.push("/feed")}/>
                         <Tab classes={{root: classes.tab}} label={<ProfileIcon />} onClick={() => history.push(`/profile/${currentUserName}`)}/>
-                        <Tab classes={{root: classes.tab}} label={<SettingsIcon />} onClick={handleClick}/>
+                        <Tab classes={{root: classes.tab}} label={<SettingsIcon />} onClick={handleMenuClick}/>
                     </Tabs>
                 </Box>
-                <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleClose}>
-                    <MenuItem onClick={() => {handleClose(); signOut()}}>Sign Out</MenuItem>
+                <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
+                    <MenuItem onClick={() => {handleMenuClose(); signOut()}}>Sign Out</MenuItem>
                 </Menu>
             </Toolbar>
         </AppBar>

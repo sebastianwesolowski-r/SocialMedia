@@ -2,72 +2,111 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
-import {selectCurrentUserName} from '../../redux/user/user.selectors';
-import {selectPostLikes, selectPostComments} from '../../redux/posts/posts.selectors';
-import {likePost, dislikePost, commentPost} from '../../redux/posts/posts.actions';
-
 import {ReactComponent as ProfileIcon} from '../../assets/profile-icon.svg';
 import {ReactComponent as Likes} from '../../assets/likes-feed.svg';
 import {ReactComponent as Liked} from '../../assets/liked.svg';
 import {ReactComponent as Comments} from '../../assets/comments-feed.svg';
-import {ReactComponent as UploadComment} from '../../assets/upload-comment.svg';
 
-import Overlay from '../overlay/overlay.component';
-import CustomPopup from '../custom-popup/custom-popup.component';
+import {Card, CardHeader, CardMedia, CardContent, CardActions, Typography, IconButton, Menu, MenuItem, Modal} from '@material-ui/core';
+import {MoreVert} from '@material-ui/icons';
+import {makeStyles} from '@material-ui/core/styles';
 
-import './feed-post.styles.scss';
+import ModalBody from '../modal-body/modal-body.component';
 
-const FeedPost = ({post, currentUserName, likePost, dislikePost, commentPost, postLikes, postComments}) => {
-    const {uploadedBy, image, message} = post;
-    const postId = post.id;
-    const [comment, setComment] = useState('');
-    const [popup, setPopup] = useState(false);
-    const [popupType, setPopupType] = useState('');
-    const [popupItems, setPopupItems] = useState(null);
-    const setHidden = () => setPopup(!popup);
+import {selectCurrentUserName} from '../../redux/user/user.selectors';
+import {selectPostLikes, selectPostComments} from '../../redux/posts/posts.selectors';
+import {likePost, dislikePost} from '../../redux/posts/posts.actions';
 
-    const handleChange = event => {
-        setComment(event.target.value);
+const useStyles = makeStyles(theme => ({
+    root: {
+        width: "90%",
+        maxWidth: "614px",
+        backgroundColor: theme.palette.common.white,
+        border: `1px solid ${theme.palette.secondary.main}`,
+        borderRadius: "5px",
+        marginBottom: "30px"
+    },
+    headerTitle: {
+        fontSize: "1rem",
+        fontWeight: "500"
+    },
+    headerLink: {
+        color: "#333333",
+        textDecoration: "none"
+    },
+    media: {
+        height: "410px"
+    },
+    stat: {
+        display: "flex",
+        alignItems: "center",
+        marginRight: "22px"
+    },
+    modal: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
     }
-    
+}));
+
+const FeedPost = ({post, currentUserName, likePost, dislikePost, postLikes, postComments}) => {
+    const classes = useStyles();
+    const {id, uploadedBy, image, message} = post;
+    const [menuAnchor, setMenuAnchor] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalType, setModalType] = useState('');
+    const [modalContent, setModalContent] = useState(null);
+
+    const handleMenuClick = e => setMenuAnchor(e.currentTarget);
+    const handleMenuClose = () => setMenuAnchor(null);
+
+    const handleModalOpen = () => setModalOpen(true);
+    const handleModalClose = () => setModalOpen(false);
+
     return (
-        <div className="feed-post">
-            <div className="uploaded-by">
-                <ProfileIcon />
-                <Link to={`profile/${uploadedBy}`}>
-                    <span>{uploadedBy}</span>
-                </Link>
-            </div>
-            <div className="image" style={{backgroundImage: `url(${image})`}}></div>
-            <div className="message">{message}</div>
-            <div className="post-stats">
-                <div className="stat">
-                    {
-                        postLikes.includes(currentUserName) ? (
-                            <Liked onClick={() => dislikePost({currentUserName, postId})}/>
-                        ) : (
-                            <Likes onClick={() => likePost({currentUserName, postId})} />
-                        )
-                    }
-                    <span onClick={() => {setPopupType('Likes'); setPopupItems(postLikes); setPopup(true);}}>{postLikes.length}</span>
-                </div>
-                <div className="stat">
-                    <Comments />
-                    <span onClick={() => {setPopupType('Comments'); setPopupItems(postComments); setPopup(true);}}>{postComments.length}</span>
-                </div>
-                {
-                    popup ? (
-                        <Overlay>
-                            <CustomPopup type={popupType} items={popupItems} setHidden={setHidden} />
-                        </Overlay>
-                    ) : null
-                }
-            </div>
-            <div className="upload-comment">
-                <input type="text" placeholder="write a comment ..." value={comment} onChange={handleChange} />
-                <UploadComment onClick={() => {commentPost({currentUserName, comment, postId}); setComment('');}} />
-            </div>
-        </div>
+        <>
+            <Card className={classes.root}>
+                <CardHeader
+                    classes={{title: classes.headerTitle}}
+                    avatar={<ProfileIcon />}
+                    action={<IconButton><MoreVert onClick={handleMenuClick}/></IconButton>}
+                    title={<Link className={classes.headerLink} to={`profile/${uploadedBy}`}>{uploadedBy}</Link>}
+                    subheader="data posta"
+                />
+                <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
+                    <MenuItem>Copy Link</MenuItem>
+                </Menu>
+                <CardMedia className={classes.media} image={image} />
+                <CardContent>
+                    <Typography variant="body1" color="#333333">{message}</Typography>
+                </CardContent>
+                <CardActions>
+                    <div className={classes.stat}>
+                        {
+                            postLikes.includes(currentUserName) ? (
+                                <IconButton onClick={() => dislikePost({currentUserName, id})}>
+                                    <Liked />
+                                </IconButton>
+                            ) : (
+                                <IconButton onClick={() => likePost({currentUserName, id})}>
+                                    <Likes />
+                                </IconButton>
+                            )
+                        }
+                        <Typography style={{cursor: "pointer"}} variant="body1" color="#333333" onClick={() => {setModalType('Likes'); setModalContent(postLikes); handleModalOpen();}}>{postLikes.length}</Typography>
+                    </div>
+                    <div className={classes.stat}>
+                        <IconButton>
+                            <Comments />
+                        </IconButton>
+                        <Typography style={{cursor: "pointer"}} variant="body1" color="#333333" onClick={() => {setModalType('comments'); setModalContent(postComments); handleModalOpen();}}>{postComments.length}</Typography>
+                    </div>
+                </CardActions>
+            </Card>
+            <Modal className={classes.modal} open={modalOpen} onClose={handleModalClose}>
+                <ModalBody type={modalType} content={modalContent} />
+            </Modal>
+        </>
     );
 };
 
@@ -79,8 +118,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
     likePost: likeData => dispatch(likePost(likeData)),
-    dislikePost: dislikeData => dispatch(dislikePost(dislikeData)),
-    commentPost: commentData => dispatch(commentPost(commentData))
+    dislikePost: dislikeData => dispatch(dislikePost(dislikeData))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPost);

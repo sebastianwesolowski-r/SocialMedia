@@ -22,7 +22,7 @@ const theme = createMuiTheme({
       },
       h6: {
         fontSize: "1.5rem",
-        letterSpacing: "0.3px"
+        letterSpacing: "0.4px"
       },
       subtitle1: {
           fontFamily: "'Poppins', sans-serif",
@@ -30,8 +30,17 @@ const theme = createMuiTheme({
       },
       subtitle2: {
         fontSize: "0.9rem",
-        color: "#555555",
         letterSpacing: "0.4px"
+      },
+      body1: {
+        fontWeight: "500",
+        letterSpacing: "0.4px",
+      },
+      body2: {
+        fontWeight: "500",
+        color: "#333333",
+        letterSpacing: "0.4px",
+        marginLeft: "10px"
       }
   }
 });
