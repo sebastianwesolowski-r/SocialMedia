@@ -9,7 +9,7 @@ import {ReactComponent as GoogleLogin} from '../../assets/google-login.svg';
 import {Box, Typography, Button, FormControlLabel, Checkbox} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
-import {googleSignInStart, emailSignInStart} from '../../redux/user/user.actions';
+import {googleSignInStart, facebookSignInStart ,emailSignInStart} from '../../redux/user/user.actions';
 import {selectIsProcessing} from '../../redux/user/user.selectors';
 
 import FormInput from '../form-input/form-input.component';
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
         height: "40px",
         color: "#FAFAFA",
         marginBottom: "15px",
-        borderRadius: "20px",
+        borderRadius: "5px",
         textTransform: "none"
     },
     signSwitch: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     }
 });
 
-const SignIn = ({doesUserHaveAnAccount, googleSignInStart, emailSignInStart, isProcessing}) => {
+const SignIn = ({doesUserHaveAnAccount, googleSignInStart, facebookSignInStart, emailSignInStart, isProcessing}) => {
     const classes = useStyles();
     const [userData, setUserData] = useState({email: '', password: ''});
     const {email, password} = userData;
@@ -112,8 +112,8 @@ const SignIn = ({doesUserHaveAnAccount, googleSignInStart, emailSignInStart, isP
                         </Button>
                     </Box>
                 </form>
-                <Typography variant="subtitle2" style={{color: "#555555"}} style={{marginTop: "10px", marginBottom: "15px"}}>or with</Typography>
-                <Button className={classes.signInMediaButton} variant="contained" startIcon={<FbLogin />} style={{backgroundColor: "#285080"}}>Facebook</Button>
+                <Typography variant="subtitle2" style={{color: "#555555", marginTop: "10px", marginBottom: "15px"}}>or with</Typography>
+                <Button onClick={() => facebookSignInStart()} className={classes.signInMediaButton} variant="contained" startIcon={<FbLogin />} style={{backgroundColor: "#285080"}}>Facebook</Button>
                 <Button onClick={() => googleSignInStart()} className={classes.signInMediaButton} variant="contained" startIcon={<GoogleLogin />} style={{backgroundColor: "#CA4939"}}>Google</Button>
             </Box>
             <div className={classes.signSwitch}>
@@ -130,6 +130,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
     googleSignInStart: () => dispatch(googleSignInStart()),
+    facebookSignInStart: () => dispatch(facebookSignInStart()),
     emailSignInStart: userData => dispatch(emailSignInStart(userData))
 });
 

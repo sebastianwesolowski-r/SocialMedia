@@ -2,27 +2,32 @@ import {createSelector} from 'reselect';
 
 const selectPosts = state => state.posts;
 
-export const selectIsPostUpdating = createSelector(
+export const selectIsPostUploading = createSelector(
     [selectPosts],
-    posts => posts.isUpdating
+    posts => posts.isUploading
 );
 
-export const selectPostsData = createSelector(
+export const selectUsersPosts = createSelector(
     [selectPosts],
-    posts => posts.postsData
+    posts => posts.posts
 );
 
-export const selectUserPosts = userName => createSelector(
-    [selectPostsData],
-    posts => Object.values(posts).filter(el => el.uploadedBy === userName)
+export const selectUserProfilePosts = createSelector(
+    [selectPosts],
+    posts => posts.profilePosts
+);
+
+export const selectPostById = postId => createSelector(
+    [selectUsersPosts],
+    posts => posts[postId]
 );
 
 export const selectPostLikes = postId => createSelector(
-    [selectPostsData],
+    [selectUsersPosts],
     posts => posts[postId].likes
 );
 
 export const selectPostComments = postId => createSelector(
-    [selectPostsData],
+    [selectUsersPosts],
     posts => posts[postId].comments
 );

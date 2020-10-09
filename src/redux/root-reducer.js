@@ -5,11 +5,11 @@ import usersReducer from './users/users.reducer';
 import postsReducer from './posts/posts.reducer';
 
 import {persistReducer} from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import storageSession from 'redux-persist/lib/storage/session';
 
 const reduxPersistConfig = {
     key: 'root',
-    storage,
+    storage: storageSession,
     whiteList: ['users', 'posts']
 };
 

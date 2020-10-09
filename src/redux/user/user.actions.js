@@ -4,6 +4,10 @@ export const googleSignInStart = () => ({
     type: UserActionTypes.GOOGLE_SIGN_IN_START
 });
 
+export const facebookSignInStart = () => ({
+    type: UserActionTypes.FACEBOOK_SIGN_IN_START
+})
+
 export const emailSignInStart = userData => ({
     type: UserActionTypes.EMAIL_SIGN_IN_START,
     payload: userData
@@ -17,10 +21,6 @@ export const signInSuccess = user => ({
 export const signInFailure = error => ({
     type: UserActionTypes.SIGN_IN_FAILURE,
     payload: error
-});
-
-export const checkUserSession = () => ({
-    type: UserActionTypes.CHECK_USER_SESSION
 });
 
 export const signOutStart = () => ({
@@ -41,9 +41,8 @@ export const signUpStart = userData => ({
     payload: userData
 });
 
-export const signUpSuccess = ({user, additionalData}) => ({
-    type: UserActionTypes.SIGN_UP_SUCCESS,
-    payload: {user, additionalData}
+export const signUpSuccess = () => ({
+    type: UserActionTypes.SIGN_UP_SUCCESS
 });
 
 export const signUpFailure = error => ({
@@ -54,10 +53,6 @@ export const signUpFailure = error => ({
 export const deleteUserStart = userData => ({
     type: UserActionTypes.DELETE_USER_START,
     payload: userData
-});
-
-export const userIsNull = () => ({
-    type: UserActionTypes.USER_IS_NULL
 });
 
 export const followUser = followData => ({

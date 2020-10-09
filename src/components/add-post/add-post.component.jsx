@@ -5,14 +5,14 @@ import {createStructuredSelector} from 'reselect';
 import {ReactComponent as Send} from '../../assets/send.svg';
 import {ReactComponent as SendImage} from '../../assets/send-image.svg';
 
-import {Box, InputBase, Button, ButtonGroup} from '@material-ui/core';
+import {Box, InputBase, Button} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
-import {selectIsPostUpdating} from '../../redux/posts/posts.selectors';
+import Spinner from '../spinner/spinner.component';
+
+import {selectIsPostUploading} from '../../redux/posts/posts.selectors';
 import {uploadPostStart} from '../../redux/posts/posts.actions';
 import {selectCurrentUserName} from '../../redux/user/user.selectors';
-
-import Spinner from '../spinner/spinner.component';
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const AddPost = ({currentUserName, uploadPostStart, isUpdating}) => {
+const AddPost = ({currentUserName, uploadPostStart, isUploading}) => {
     const classes = useStyles();
 
     const [postMessage, setPostMessage] = useState('');
@@ -64,12 +64,23 @@ const AddPost = ({currentUserName, uploadPostStart, isUpdating}) => {
     };
 
     return (
-        <Box width="620px" height="100px" marginBottom="45px" padding="10px" paddingBottom="7px" bgcolor="common.white" border={1} borderColor="secondary.main" borderRadius={5}>
-            <form className={classes.form}>
-                <InputBase className={classes.textfield} placeholder={`What are your thoughts, ${currentUserName}?`}/>
+        <Box width="620px" height="100px" marginBottom="45px" padding="10px" paddingBottom="7px" bgcolor="common.white" border={1} borderColor="secondary.main" borderRadius={1}>
+            <form className={classes.form} onSubmit={handleSubmit}>
+                <InputBase type="text" className={classes.textfield} value={postMessage} onChange={handleMessageChange} placeholder={`What are your thoughts, ${currentUserName}?`} required/>
                 <div>
-                    <Button color="primary" variant="contained" className={classes.sendPostBtn}><Send /></Button>
-                    <Button color="primary" variant="contained" className={classes.sendImageBtn}><SendImage /></Button>
+                    <Button type="submit" color="primary" variant="contained" className={classes.sendPostBtn} disabled={isUploading}>
+                        {
+                            isUploading ? (
+                                <Spinner />
+                            ) : (
+                                <Send />
+                            )
+                        }
+                    </Button>
+                    <input accept="image/*" type="file" id="file-button" style={{display: "none"}} onChange={handleImageChange} required/>
+                    <label htmlFor="file-button">
+                        <Button color="primary" variant="contained" component="span"><SendImage /></Button>
+                    </label>
                 </div>
             </form>
         </Box>
@@ -78,7 +89,7 @@ const AddPost = ({currentUserName, uploadPostStart, isUpdating}) => {
 
 const mapStateToProps = createStructuredSelector({
     currentUserName: selectCurrentUserName,
-    isUpdating: selectIsPostUpdating
+    isUploading: selectIsPostUploading
 });
 
 const mapDispatchToProps = dispatch => ({

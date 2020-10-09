@@ -11,7 +11,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
     switch(action.type) {
         case UserActionTypes.EMAIL_SIGN_IN_START:
         case UserActionTypes.SIGN_UP_START:
-        case UserActionTypes.CHECK_USER_SESSION:
             return {
                 ...state,
                 isProcessing: true,

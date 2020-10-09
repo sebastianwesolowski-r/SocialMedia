@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 import {ThemeProvider} from '@material-ui/core/styles';
 
 import {store} from './redux/store';
@@ -10,14 +10,17 @@ import theme from './theme';
 
 import App from './App';
 
+import ErrorBoundary from './components/error-boundary/error-boundary.component';
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
+    <HashRouter>
       <ThemeProvider theme={theme}>
-        <App />
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
       </ThemeProvider>
-    </BrowserRouter>
+    </HashRouter>
   </Provider>,
   document.getElementById('root')
 );

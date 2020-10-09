@@ -9,47 +9,47 @@ import config from './config';
 firebase.initializeApp(config);
 
 export const storage = firebase.storage();
-
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
+export const facebookProvider = new firebase.auth.FacebookAuthProvider();
 googleProvider.setCustomParameters({prompt: 'select_account'});
-export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
+facebookProvider.setCustomParameters({prompt: 'select_account'});
+export const firebaseSignInGoogle = () => auth.signInWithPopup(googleProvider);
+export const firebaseSignInFacebook = () => auth.signInWithPopup(facebookProvider);
 
-export const createUserProfile = async(userAuth, additionalData) => {
+export const loginUser = userAuth => {
     if(!userAuth) return;
-
     const userRef = firestore.doc(`users/${userAuth.uid}`);
-    const userSnapshot = await userRef.get();
-    if (!userSnapshot.exists) {
-        const {displayName, email} = userAuth;
-        const createdAt = new Date();
-        const followers = [];
-        const following = ["Sebastian Wesołowski"];
-        try {
-            await userRef.set({
-                displayName,
-                email,
-                createdAt,
-                followers,
-                following,
-                ...additionalData
-            });
-        } catch(error) {
-            alert('There was a problem: ', error.message);
-        }
-    }
     return userRef;
 };
 
-export const getCurrentUser = () => {
-    return new Promise((resolve,reject) => {
-        const unsubscribe = auth.onAuthStateChanged(userAuth => {
-            unsubscribe();
-            resolve(userAuth);
-        }, reject);
-    });
+export const registerUser = async(userAuth, additionalData) => {
+    if(!userAuth) return;
+    const newUserRef = firestore.doc(`users/${userAuth.uid}`);
+    const {displayName, email} = userAuth;
+    const avatar = `https://api.adorable.io/avatars/85/${email}.png`;
+    const createdAt = new Date();
+    const followers = [];
+    const following = ["Sebastian Wesołowski"];
+    const adminRef = firestore.doc("users/ZPcaaNBB2BhqTKQkfbzXsivdiph1");
+    try {
+        await newUserRef.set({
+            displayName,
+            email,
+            avatar,
+            createdAt,
+            followers,
+            following,
+            ...additionalData
+        });
+        await adminRef.update({
+            followers: firebase.firestore.FieldValue.arrayUnion(displayName ? displayName : additionalData.displayName)
+        });
+    } catch (e) {
+        throw new Error(e.message);
+    }
 };
 
 export const changeUserPassword = (presentPassword, newPassword) => {
@@ -82,11 +82,12 @@ export const deleteUserAccount = presentPassword => {
 
 export const convertUsersSnapshotToMap = users => {
     const transformedUsers = users.docs.map(doc => {
-        const {displayName, followers, following} = doc.data();
+        const {displayName, avatar, followers, following} = doc.data();
         return {
             routeName: encodeURI(displayName.toLowerCase()),
             id: doc.id,
             displayName,
+            avatar,
             followers,
             following
         };
@@ -97,7 +98,8 @@ export const convertUsersSnapshotToMap = users => {
     }, {});
 };
 
-export const convertPostsSnapshotToMap = posts => {
+export const convertPostsSnapshotToArray = posts => {
+    if(!posts) return [];
     const transformedPosts = posts.docs.map(doc => {
         const {uploadedBy, message, image, likes, comments, createdAt} = doc.data();
         return {
@@ -110,10 +112,7 @@ export const convertPostsSnapshotToMap = posts => {
             createdAt
         };
     });
-    return transformedPosts.reduce((accumulator, post) => {
-        accumulator[post.id] = post;
-        return accumulator;
-    }, {});
+    return transformedPosts;
 };
 
 export const createPost = async (postMessage, currentUser, imageUrl) => {
@@ -122,7 +121,7 @@ export const createPost = async (postMessage, currentUser, imageUrl) => {
     const message = postMessage;
     const image = imageUrl;
     const likes = [];
-    const comments = [];    
+    const comments = [];
     const createdAt = new Date();
     try {
         await postRef.set({

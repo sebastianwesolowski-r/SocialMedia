@@ -2,8 +2,6 @@ import React from 'react';
 
 import NotFound from '../../pages/notfound/notfound.component';
 
-import './error-boundary.styles.scss';
-
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);

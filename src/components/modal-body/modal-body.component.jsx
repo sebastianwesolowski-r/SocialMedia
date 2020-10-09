@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 import {ReactComponent as Send} from '../../assets/send.svg';
 
-import {Typography, List, ListItem, ListItemAvatar, ListItemText, Paper, Button, InputBase} from '@material-ui/core';
+import {Typography, List, ListItem, ListItemAvatar, ListItemText, Paper, Button, InputBase, Zoom} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles  = makeStyles(theme => ({
@@ -42,6 +42,10 @@ const useStyles  = makeStyles(theme => ({
             background: theme.palette.secondary.main
         }
     },
+    link: {
+        color: "#333333",
+        textDecoration: "none"
+    },
     uploadComment: {
         display: "flex",
         alignItems: "center",
@@ -68,7 +72,7 @@ const useStyles  = makeStyles(theme => ({
     }
 }));
 
-const ModalBody = ({type, content, title}) => {
+const ModalBody = ({type, content, zoomin, handleModalClose}) => {
     const classes = useStyles();
     const renderSwitch = type => {
         switch(type) {
@@ -83,7 +87,7 @@ const ModalBody = ({type, content, title}) => {
                                 content.map(item => (
                                     <ListItem key={item}>
                                         <ListItemAvatar><div /></ListItemAvatar>
-                                        <ListItemText primary={<Link to={`/profile/${item}`}>{item}</Link>}/>
+                                        <ListItemText primary={<Link className={classes.link} to={`/profile/${item}`} onClick={handleModalClose}>{item}</Link>}/>
                                     </ListItem>
                                 ))
                             }
@@ -96,9 +100,9 @@ const ModalBody = ({type, content, title}) => {
                     <List className={classes.list}>
                         {
                             content.map(item => (
-                                <ListItem key={item}>
+                                <ListItem key={`${item.commentedBy}${item.commentContent}`}>
                                     <ListItemAvatar><div /></ListItemAvatar>
-                                    <ListItemText primary={<Link to={`/profile/${item.commentedBy}`}>{item.commentedBy}</Link>} secondary={item.commentContent} />
+                                    <ListItemText primary={<Link className={classes.link} to={`/profile/${item.commentedBy}`} onClick={handleModalClose}>{item.commentedBy}</Link>} secondary={item.commentContent} />
                                 </ListItem>
                             ))
                         }
@@ -109,11 +113,16 @@ const ModalBody = ({type, content, title}) => {
                     </Paper>
                 </div>
             );
+            default: return;
         }
     }
 
     return (
-        renderSwitch(type)
+        <Zoom in={zoomin}>
+            {
+                renderSwitch(type)
+            }
+        </Zoom>
     );
 };
 

@@ -9,7 +9,7 @@ import {ReactComponent as HomeIcon} from '../../assets/home.svg';
 import {ReactComponent as ProfileIcon} from '../../assets/profile.svg';
 import {ReactComponent as SettingsIcon} from '../../assets/settings.svg';
 
-import {AppBar, Toolbar, Box, Typography, InputBase, Tabs, Tab, Menu, MenuItem} from '@material-ui/core';
+import {AppBar, Toolbar, Box, Typography, InputBase, Menu, MenuItem, IconButton} from '@material-ui/core';
 import {makeStyles, fade} from '@material-ui/core/styles';
 
 import {selectCurrentUserName} from '../../redux/user/user.selectors';
@@ -25,12 +25,12 @@ const useStyles = makeStyles(theme => ({
         boxShadow: "none"
     },
     bar: {
-        width: "1050px"
+        display: "flex",
+        width: "1100px"
     },
     searchField: {
         border: `1px solid ${theme.palette.secondary.main}`,
         borderRadius: theme.shape.borderRadius,
-        margin: "auto",
         "&:hover": {
             backgroundColor: fade(theme.palette.primary.main, 0.05),
         },
@@ -54,9 +54,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     tab: {
-        width: "50px",
-        minWidth: "50px",
-        margin: "0 25px"
+        margin: "0 30px"
     },
     menu: {
         border: `1px solid ${theme.palette.secondary.main}`
@@ -67,34 +65,35 @@ const Header = ({currentUserName, signOut, history}) => {
     const classes = useStyles();
 
     const [menuAnchor, setMenuAnchor] = useState(null);
-    const [tabsValue, setTabsValue] = useState(0);
 
     const handleMenuClick = e => setMenuAnchor(e.currentTarget);
     const handleMenuClose = () => setMenuAnchor(null);
 
-    const handleTabsChange = (e, newValue) => setTabsValue(newValue);
-
     return (
         <AppBar position="fixed" className={classes.root}>
             <Toolbar className={classes.bar}>
-                <Box display="flex" alignItems="center" justifyContent="space-between" width="195px" height="100%" marginRight="auto">
-                    <AppLogoSmall />
+                <Box display="flex" flex="1" alignItems="center" justifyContent="center" width="195px" height="100%" marginRight="auto">
+                    <AppLogoSmall style={{marginRight: "25px"}}/>
                     <Typography variant="h6" color="primary">React Connect</Typography>
                 </Box>
-                <Box className={classes.searchField} display="flex" alignItems="center" width="240px" height="35px" bgcolor="#EEEEEE">
+                <Box className={classes.searchField} display="flex" flex="1" alignItems="center" width="260px" maxWidth="260px" height="35px" bgcolor="#EEEEEE" margin="0 auto">
                     <div className={classes.searchIcon}>
                         <SearchIcon />
                     </div>
                     <InputBase className={classes.searchInput} placeholder="Search"/>
                 </Box>
-                <Box>
-                    <Tabs value={tabsValue} onChange={handleTabsChange} style={{marginLeft: "auto"}} indicatorColor="primary">
-                        <Tab classes={{root: classes.tab}} label={<HomeIcon />} onClick={() => history.push("/feed")}/>
-                        <Tab classes={{root: classes.tab}} label={<ProfileIcon />} onClick={() => history.push(`/profile/${currentUserName}`)}/>
-                        <Tab classes={{root: classes.tab}} label={<SettingsIcon />} onClick={handleMenuClick}/>
-                    </Tabs>
+                <Box display="flex" flex="1" alignItems="center" justifyContent="center" marginLeft="auto">
+                    <IconButton className={classes.tab} onClick={() => history.push("/feed")}>
+                        <HomeIcon />
+                    </IconButton>
+                    <IconButton className={classes.tab} onClick={() => history.push(`/profile/${currentUserName}`)}>
+                        <ProfileIcon />
+                    </IconButton>
+                    <IconButton className={classes.tab} onClick={handleMenuClick}>
+                        <SettingsIcon />
+                    </IconButton>
                 </Box>
-                <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
+                <Menu anchorEl={menuAnchor} getContentAnchorEl={null} anchorOrigin={{vertical: "center", horizontal: "right"}} transformOrigin={{vertical: "top", horizontal: "left"}} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
                     <MenuItem onClick={() => {handleMenuClose(); signOut()}}>Sign Out</MenuItem>
                 </Menu>
             </Toolbar>

@@ -1,20 +1,37 @@
-import {takeLatest, all, put, call} from 'redux-saga/effects';
+import {takeLatest, all, put, call, select} from 'redux-saga/effects';
 
 import PostsActionTypes from './posts.types';
 
-import {storage, firestore, convertPostsSnapshotToMap, createPost} from '../../firebase/firebase';
+import {storage, firestore, convertPostsSnapshotToArray, createPost} from '../../firebase/firebase';
 import firebase from '../../firebase/firebase';
 
-import {uploadPostSuccess, uploadPostFailure, fetchPostsStart, fetchPostsSuccess, fetchPostsFailure, updatePost} from './posts.actions';
+import {fetchPostsStart, fetchPostsSuccess, fetchPostsFailure, fetchProfilePostsSuccess, fetchProfilePostsFailure, uploadPostSuccess, uploadPostFailure, updatePost} from './posts.actions';
+
+import {selectCurrentUserFollowing} from '../user/user.selectors';
+
+const postsRef = firestore.collection('posts');
 
 export function* fetchPosts() {
+    const currentUserFollowing = yield select(selectCurrentUserFollowing);
     try {
-        const postsRef = firestore.collection('posts');
-        const snapshot = yield postsRef.get();
-        const postsMap = yield call(convertPostsSnapshotToMap, snapshot);
+        let postsMap = [];
+        if(currentUserFollowing.length > 0) {
+            const postsSnapshot = yield postsRef.where("uploadedBy", "in", currentUserFollowing).get();
+            postsMap = yield call(convertPostsSnapshotToArray, postsSnapshot);
+        }
         yield put(fetchPostsSuccess(postsMap));
     } catch(error) {
         yield put(fetchPostsFailure(error));
+    }
+}
+
+export function* fetchProfilePosts({payload}) {
+    try {
+        const profilePostsSnapshot = yield postsRef.where("uploadedBy", "==", payload).get();
+        const profilePostsMap = yield call(convertPostsSnapshotToArray, profilePostsSnapshot);
+        yield put(fetchProfilePostsSuccess(profilePostsMap));
+    } catch (e) {
+        yield put(fetchProfilePostsFailure(e));
     }
 }
 
@@ -78,6 +95,10 @@ export function* onFetchPostsStart() {
     yield takeLatest(PostsActionTypes.FETCH_POSTS_START, fetchPosts);
 }
 
+export function* onFetchProfilePostsStart() {
+    yield takeLatest(PostsActionTypes.FETCH_PROFILE_POSTS_START, fetchProfilePosts);
+}
+
 export function* onPostUpload() {
     yield takeLatest(PostsActionTypes.UPLOAD_POST_START, uploadPost);
 }
@@ -99,5 +120,5 @@ export function* onPostDelete() {
 }
 
 export function* postsSagas() {
-    yield all([call(onPostUpload), call(onFetchPostsStart), call(onPostLike), call(onPostDislike), call(onPostComment), call(onPostDelete)]);
+    yield all([call(onPostUpload), call(onFetchPostsStart), call(onFetchProfilePostsStart), call(onPostLike), call(onPostDislike), call(onPostComment), call(onPostDelete)]);
 }

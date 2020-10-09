@@ -1,9 +1,11 @@
 import React from 'react';
 
-import './loader.styles.css';
+import {Backdrop, CircularProgress} from '@material-ui/core';
 
-const Loader = () => (
-    <div className="loader"></div>
+const Loader = ({backdropOpen}) => (
+    <Backdrop style={{zIndex: "10"}} open={backdropOpen}>
+        <CircularProgress color="primary" />
+    </Backdrop>
 );
 
 export default Loader;

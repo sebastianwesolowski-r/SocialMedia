@@ -17,6 +17,11 @@ export const selectCurrentUserId = createSelector(
     user => user.id
 );
 
+export const selectCurrentUserFollowing = createSelector(
+    [selectCurrentUser],
+    user => user.following
+);
+
 export const selectIsProcessing = createSelector(
     [selectUser],
     user => user.isProcessing

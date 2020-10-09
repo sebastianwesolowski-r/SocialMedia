@@ -90,7 +90,7 @@ const SignUp = ({doesUserHaveAnAccount, signUpStart, isProcessing}) => {
             </Box>
             <div className={classes.signSwitch}>
                 <p style={{fontSize: "1rem", marginBottom: "5px", letterSpacing: "0.4px"}}>Already have an account ?</p>
-                <Typography variant="subtitle2" color="#555555"><span onClick={() => doesUserHaveAnAccount()} style={{textDecoration: "underline", fontSize: "0.9rem", color: "#333333", cursor: "pointer"}}>Sign in</span> to access all the features of service.</Typography>
+                <Typography variant="subtitle2" style={{color: "#555555"}}><span onClick={() => doesUserHaveAnAccount()} style={{textDecoration: "underline", fontSize: "0.9rem", color: "#333333", cursor: "pointer"}}>Sign in</span> to access all the features of service.</Typography>
             </div>
         </>
     );
