@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 
@@ -9,58 +9,30 @@ import Loader from '../../components/loader/loader.component';
 import AddPost from '../../components/add-post/add-post.component';
 
 import {selectCurrentUser} from '../../redux/user/user.selectors';
-import {selectUsersData} from '../../redux/users/users.selectors';
-import {fetchUsersStart} from '../../redux/users/users.actions';
-import {fetchPostsStart} from '../../redux/posts/posts.actions';
 import {selectUsersPosts} from '../../redux/posts/posts.selectors';
 
-const FeedPage = ({currentUser, usersData, usersPosts, fetchUsersStart, fetchPostsStart}) => {
-
-    const [backdropOpen, setBackdropOpen] = useState(false);
-
-    useEffect(() => {
-        if(!usersData && !usersPosts) {
-            setBackdropOpen(true);
-            fetchUsersStart();
-            fetchPostsStart();
+const FeedPage = ({currentUser, usersPosts}) => (
+    <Box width="100%" height="100%" display="flex" flexDirection="column" alignItems="center" paddingTop="90px" style={{overflowY: "auto"}}>
+        <AddPost />
+        {
+            currentUser && usersPosts ? (
+                <>
+                    {
+                        usersPosts.sort(({createdAt: previousDate}, {createdAt: currentDate}) => new Date(previousDate.seconds * 1000) - new Date(currentDate.seconds * 1000)).map(post => (
+                            <FeedPost key={post.id} post={post} />
+                        ))
+                    }
+                </>
+            ) : (
+                <Loader backdropOpen={currentUser && usersPosts ? false : true} />
+            )
         }
-    });
-
-    useEffect(() => {
-        if(usersData && usersPosts) {
-            setBackdropOpen(false);
-        }
-    });
-
-    return (
-        <Box width="100%" height="100%" display="flex" flexDirection="column" alignItems="center" paddingTop="90px" style={{overflowY: "auto"}}>
-            <AddPost />
-            {
-                currentUser && usersData && usersPosts ? (
-                    <>
-                        {
-                            usersPosts.map(post => (
-                                <FeedPost key={post.id} post={post} />
-                            ))
-                        }
-                    </>
-                ) : (
-                    <Loader backdropOpen={backdropOpen} />
-                )
-            }
-        </Box>
-    );
-};
+    </Box>
+);
 
 const mapStateToProps = createStructuredSelector ({
     currentUser: selectCurrentUser,
-    usersData: selectUsersData,
     usersPosts: selectUsersPosts
 });
 
-const mapDispatchToProps = dispatch => ({
-    fetchUsersStart: () => dispatch(fetchUsersStart()),
-    fetchPostsStart: () => dispatch(fetchPostsStart())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);
+export default connect(mapStateToProps)(FeedPage);

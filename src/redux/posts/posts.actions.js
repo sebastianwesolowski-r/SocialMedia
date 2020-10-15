@@ -14,21 +14,6 @@ export const fetchPostsFailure = error => ({
     payload: error
 });
 
-export const fetchProfilePostsStart = userName => ({
-    type: PostsActionTypes.FETCH_PROFILE_POSTS_START,
-    payload: userName
-});
-
-export const fetchProfilePostsSuccess = posts => ({
-    type: PostsActionTypes.FETCH_PROFILE_POSTS_SUCCESS,
-    payload: posts
-});
-
-export const fetchProfilePostsFailure = error => ({
-    type: PostsActionTypes.FETCH_PROFILE_POSTS_FAILURE,
-    payload: error
-});
-
 export const uploadPostStart = postData => ({
     type: PostsActionTypes.UPLOAD_POST_START,
     payload: postData

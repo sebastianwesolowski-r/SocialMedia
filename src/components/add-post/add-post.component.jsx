@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
     textfield: {
         width: "100%",
         height: "40px",
+        fontSize: "0.9rem",
         color: "#333333",
         backgroundColor: theme.palette.grey[100],
         border: `1px solid ${theme.palette.secondary.main}`,
@@ -36,14 +37,21 @@ const useStyles = makeStyles(theme => ({
         }
     },
     sendPostBtn: {
-        width: "90px",
+        width: "105px",
         height: "30px",
-        marginRight: "20px"
+        marginRight: "20px",
+        textTransform: "unset !important"
     },
     sendImageBtn: {
-        width: "50px",
+        width: "90px",
         height: "30px",
-        padding: "0"
+        padding: "0",
+        textTransform: "unset !important"
+    },
+    buttonLabel: {
+        fontSize: "0.8rem",
+        fontWeight: "600",
+        color: "#FAFAFA"
     }
 }));
 
@@ -68,18 +76,20 @@ const AddPost = ({currentUserName, uploadPostStart, isUploading}) => {
             <form className={classes.form} onSubmit={handleSubmit}>
                 <InputBase type="text" className={classes.textfield} value={postMessage} onChange={handleMessageChange} placeholder={`What are your thoughts, ${currentUserName}?`} required/>
                 <div>
-                    <Button type="submit" color="primary" variant="contained" className={classes.sendPostBtn} disabled={isUploading}>
+                    <Button type="submit" color="primary" variant="contained" className={classes.sendPostBtn} startIcon={isUploading ? null : <Send />} disabled={isUploading}>
                         {
                             isUploading ? (
                                 <Spinner />
                             ) : (
-                                <Send />
+                                <span className={classes.buttonLabel}>Upload</span>
                             )
                         }
                     </Button>
                     <input accept="image/*" type="file" id="file-button" style={{display: "none"}} onChange={handleImageChange} required/>
                     <label htmlFor="file-button">
-                        <Button color="primary" variant="contained" component="span"><SendImage /></Button>
+                        <Button variant="contained" className={classes.sendImageBtn} style={{backgroundColor: postImage ? "#17171A" : "#2196F3"}} startIcon={<SendImage />} component="span">
+                            <span className={classes.buttonLabel}>Image</span>
+                        </Button>
                     </label>
                 </div>
             </form>

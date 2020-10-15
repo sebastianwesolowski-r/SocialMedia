@@ -21,10 +21,11 @@ const useStyles = makeStyles({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        paddingTop: "50px"
+        paddingTop: "50px",
+        marginBottom: "30px"
     },
     signBtn: {
-        width: "95px",
+        width: "100px",
         height: "35px"
     },
     signCheckbox: {
@@ -112,7 +113,6 @@ const SignIn = ({doesUserHaveAnAccount, googleSignInStart, facebookSignInStart, 
                         </Button>
                     </Box>
                 </form>
-                <Typography variant="subtitle2" style={{color: "#555555", marginTop: "10px", marginBottom: "15px"}}>or with</Typography>
                 <Button onClick={() => facebookSignInStart()} className={classes.signInMediaButton} variant="contained" startIcon={<FbLogin />} style={{backgroundColor: "#285080"}}>Facebook</Button>
                 <Button onClick={() => googleSignInStart()} className={classes.signInMediaButton} variant="contained" startIcon={<GoogleLogin />} style={{backgroundColor: "#CA4939"}}>Google</Button>
             </Box>

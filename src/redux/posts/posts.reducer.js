@@ -4,7 +4,6 @@ import {updatePost} from './posts.utils';
 
 const INITIAL_STATE = {
     posts: [],
-    profilePosts: [],
     isUploading: false,
     isFetching: false,
     error: null
@@ -27,23 +26,6 @@ const postsReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 error: action.payload
             };
-        case PostsActionTypes.FETCH_PROFILE_POSTS_START:
-            return {
-                ...state,
-                isFetching: true
-            };
-        case PostsActionTypes.FETCH_PROFILE_POSTS_SUCCESS:
-            return {
-                ...state,
-                profilePosts: action.payload,
-                isFetching: false,
-            };
-        case PostsActionTypes.FETCH_PROFILE_POSTS_FAILURE:
-            return {
-                ...state,
-                isFetching: false,
-                error: action.payload
-            };
         case PostsActionTypes.UPLOAD_POST_START:
             return {
                 ...state,
@@ -64,8 +46,7 @@ const postsReducer = (state = INITIAL_STATE, action) => {
         case UserActionTypes.SIGN_OUT_SUCCESS:
             return {
                 ...state,
-                posts: null,
-                profilePosts: null
+                posts: null
             };
         case PostsActionTypes.UPDATE_POST:
             return {

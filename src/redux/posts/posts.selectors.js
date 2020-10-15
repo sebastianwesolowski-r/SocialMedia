@@ -12,11 +12,6 @@ export const selectUsersPosts = createSelector(
     posts => posts.posts
 );
 
-export const selectUserProfilePosts = createSelector(
-    [selectPosts],
-    posts => posts.profilePosts
-);
-
 export const selectPostById = postId => createSelector(
     [selectUsersPosts],
     posts => posts[postId]

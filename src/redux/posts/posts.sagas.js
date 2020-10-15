@@ -5,7 +5,7 @@ import PostsActionTypes from './posts.types';
 import {storage, firestore, convertPostsSnapshotToArray, createPost} from '../../firebase/firebase';
 import firebase from '../../firebase/firebase';
 
-import {fetchPostsStart, fetchPostsSuccess, fetchPostsFailure, fetchProfilePostsSuccess, fetchProfilePostsFailure, uploadPostSuccess, uploadPostFailure, updatePost} from './posts.actions';
+import {fetchPostsStart, fetchPostsSuccess, fetchPostsFailure, uploadPostSuccess, uploadPostFailure, updatePost} from './posts.actions';
 
 import {selectCurrentUserFollowing} from '../user/user.selectors';
 
@@ -25,16 +25,6 @@ export function* fetchPosts() {
     }
 }
 
-export function* fetchProfilePosts({payload}) {
-    try {
-        const profilePostsSnapshot = yield postsRef.where("uploadedBy", "==", payload).get();
-        const profilePostsMap = yield call(convertPostsSnapshotToArray, profilePostsSnapshot);
-        yield put(fetchProfilePostsSuccess(profilePostsMap));
-    } catch (e) {
-        yield put(fetchProfilePostsFailure(e));
-    }
-}
-
 export function* uploadPost({payload: {postMessage, currentUserName, postImage}}) {
     let imageUrl = '';
     try {
@@ -47,30 +37,29 @@ export function* uploadPost({payload: {postMessage, currentUserName, postImage}}
             imageUrl = yield storage.ref("postImages").child(postImage.name).getDownloadURL();
         }
         yield call(createPost, postMessage, currentUserName, imageUrl);
-        yield put(fetchPostsStart());
         yield put(uploadPostSuccess());
     } catch(error) {
         yield put(uploadPostFailure(error));
     }
 }
 
-export function* likePost({payload: {currentUserName, postId}}) {
-    const postToLikeRef = yield firestore.doc(`posts/${postId}`);
+export function* likePost({payload: {currentUserName, id}}) {
+    const postToLikeRef = yield firestore.doc(`posts/${id}`);
     yield postToLikeRef.update({
         likes: firebase.firestore.FieldValue.arrayUnion(currentUserName)
     });
-    yield updatePostState(postId);
+    yield updatePostState(id);
 }
 
-export function* dislikePost({payload: {currentUserName, postId}}) {
-    const postToDislikeRef = yield firestore.doc(`posts/${postId}`);
+export function* dislikePost({payload: {currentUserName, id}}) {
+    const postToDislikeRef = yield firestore.doc(`posts/${id}`);
     yield postToDislikeRef.update({
         likes: firebase.firestore.FieldValue.arrayRemove(currentUserName)
     });
-    yield updatePostState(postId);
+    yield updatePostState(id);
 }
 
-export function* commentPost({payload: {currentUserName, comment, postId}}) {
+export function* commentPost({payload: {postId, currentUserName, comment}}) {
     const postToCommentRef = yield firestore.doc(`posts/${postId}`);
     yield postToCommentRef.update({
         comments: firebase.firestore.FieldValue.arrayUnion({commentedBy: currentUserName, commentContent: comment})
@@ -91,12 +80,8 @@ export function* deletePost({payload: postId}) {
     yield put(fetchPostsStart());
 }
 
-export function* onFetchPostsStart() {
+export function* fecthPostsAfertSignIn() {
     yield takeLatest(PostsActionTypes.FETCH_POSTS_START, fetchPosts);
-}
-
-export function* onFetchProfilePostsStart() {
-    yield takeLatest(PostsActionTypes.FETCH_PROFILE_POSTS_START, fetchProfilePosts);
 }
 
 export function* onPostUpload() {
@@ -120,5 +105,5 @@ export function* onPostDelete() {
 }
 
 export function* postsSagas() {
-    yield all([call(onPostUpload), call(onFetchPostsStart), call(onFetchProfilePostsStart), call(onPostLike), call(onPostDislike), call(onPostComment), call(onPostDelete)]);
+    yield all([call(onPostUpload), call(fecthPostsAfertSignIn), call(onPostLike), call(onPostDislike), call(onPostComment), call(onPostDelete)]);
 }

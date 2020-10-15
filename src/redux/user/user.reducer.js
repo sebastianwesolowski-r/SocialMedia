@@ -1,5 +1,7 @@
 import UserActionTypes from './user.types';
 
+import {updateFollowingsOnFollow, updateFollowingsOnUnfollow} from './user.utils';
+
 const INITIAL_STATE = {
     access: false,
     currentUser: null,
@@ -36,12 +38,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 currentUser: null,
                 error: null
             };
-        case UserActionTypes.USER_IS_NULL:
-            return {
-                ...state,
-                isProcessing: false,
-                currentUser: null
-            }
         case UserActionTypes.SIGN_IN_FAILURE:
         case UserActionTypes.SIGN_OUT_FAILURE:
         case UserActionTypes.SIGN_UP_FAILURE:
@@ -49,6 +45,22 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 access: false,
                 isProcessing: false,
+                error: action.payload
+            };
+        case UserActionTypes.FOLLOW_USER_SUCCESS:
+            return {
+                ...state,
+                currentUser: updateFollowingsOnFollow(state.currentUser, action.payload)
+            };
+        case UserActionTypes.UNFOLLOW_USER_SUCCESS:
+            return {
+                ...state,
+                currentUser: updateFollowingsOnUnfollow(state.currentUser, action.payload)
+            };
+        case UserActionTypes.FOLLOW_USER_FAILURE:
+        case UserActionTypes.UNFOLLOW_USER_FAILURE:
+            return {
+                ...state,
                 error: action.payload
             };
         default: return state;

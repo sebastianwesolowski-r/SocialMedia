@@ -1,4 +1,5 @@
 export const updatePost = (postsData, updatedPost) => {
-    postsData[updatedPost.id] = updatedPost;
-    return postsData;
+    const postToUpdate = postsData.findIndex(post => post.id === updatedPost.id);
+    postsData[postToUpdate] = updatedPost;
+    return [...postsData];
 };

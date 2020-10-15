@@ -4,6 +4,7 @@ import {Switch, Route} from 'react-router-dom';
 import {createStructuredSelector} from 'reselect';
 
 import Header from './components/header/header.component';
+import Footer from './components/footer/footer.component';
 
 import LandingPage from './pages/landing-page/landing-page.component';
 import FeedPage from './pages/feed-page/feed-page.component';
@@ -25,6 +26,7 @@ const App = ({access}) => (
         <Header />
       ) : null
     }
+    <Footer />
     <Switch>
       <UnauthenticatedRoute
         exact path="/"

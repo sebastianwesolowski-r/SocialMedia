@@ -1,3 +1,5 @@
+import { AvatarGenerator } from 'random-avatar-generator';
+
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -8,16 +10,23 @@ import config from './config';
 
 firebase.initializeApp(config);
 
+const avatarGenerator = new AvatarGenerator();
+
 export const storage = firebase.storage();
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const facebookProvider = new firebase.auth.FacebookAuthProvider();
+
 googleProvider.setCustomParameters({prompt: 'select_account'});
 facebookProvider.setCustomParameters({prompt: 'select_account'});
+
 export const firebaseSignInGoogle = () => auth.signInWithPopup(googleProvider);
 export const firebaseSignInFacebook = () => auth.signInWithPopup(facebookProvider);
+
+const usersRef = firestore.collection("users");
+const postsRef = firestore.collection("posts");
 
 export const loginUser = userAuth => {
     if(!userAuth) return;
@@ -29,7 +38,7 @@ export const registerUser = async(userAuth, additionalData) => {
     if(!userAuth) return;
     const newUserRef = firestore.doc(`users/${userAuth.uid}`);
     const {displayName, email} = userAuth;
-    const avatar = `https://api.adorable.io/avatars/85/${email}.png`;
+    const avatar = avatarGenerator.generateRandomAvatar();
     const createdAt = new Date();
     const followers = [];
     const following = ["Sebastian Wesołowski"];
@@ -49,6 +58,36 @@ export const registerUser = async(userAuth, additionalData) => {
         });
     } catch (e) {
         throw new Error(e.message);
+    }
+};
+
+export const searchUserProfile = async (userName) => {
+    try {
+        const searchedUserSnapshot = await usersRef.where("displayName", "==", userName).get();
+
+        if(searchedUserSnapshot.empty) {
+            return {error: "No results found"}
+        }
+
+        const {avatar, displayName} = searchedUserSnapshot.docs[0].data();
+        return {avatar, displayName};
+    } catch (error) {
+        return {error}
+    }
+}
+
+export const fetchUserProfile = async (userName) => {
+    try {
+        const userProfileSnapshot = await usersRef.where("displayName", "==", userName).get();
+        const userProfileData = userProfileSnapshot.docs[0].data();
+        const {displayName, avatar, followers, following} = userProfileData;
+
+        const profilePostsSnapshot = await postsRef.where("uploadedBy", "==", userName).get();
+        const profilePostsData = await convertPostsSnapshotToArray(profilePostsSnapshot);
+
+        return {id: userProfileSnapshot.docs[0].id, displayName, avatar, followers, following, posts: profilePostsData};
+    } catch (error) {
+        return {error};
     }
 };
 
@@ -80,22 +119,14 @@ export const deleteUserAccount = presentPassword => {
     .catch(error => alert(error.message))
 };
 
-export const convertUsersSnapshotToMap = users => {
-    const transformedUsers = users.docs.map(doc => {
-        const {displayName, avatar, followers, following} = doc.data();
-        return {
-            routeName: encodeURI(displayName.toLowerCase()),
-            id: doc.id,
-            displayName,
-            avatar,
-            followers,
-            following
-        };
-    });
-    return transformedUsers.reduce((accumulator, user) => {
-        accumulator[user.displayName] = user;
-        return accumulator;
-    }, {});
+export const getPostById = async postId => {
+    try {
+        const postSnapshot = await firestore.doc(`posts/${postId}`).get();
+        const postData = postSnapshot.data();
+        return postData;
+    } catch (e) {
+        return e;
+    }
 };
 
 export const convertPostsSnapshotToArray = posts => {

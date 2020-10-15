@@ -2,35 +2,42 @@ import {takeLatest, put, all, call} from 'redux-saga/effects';
 
 import UserActionTypes from './user.types';
 
-import {signInSuccess, signInFailure, signOutStart, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure} from './user.actions';
-
-import {fetchUsersStart} from '../users/users.actions';
+import {signInSuccess, signInFailure, signOutStart, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, followUserSuccess, followUserFailure, unfollowUserSuccess, unfollowUserFailure} from './user.actions';
+import {fetchPostsStart} from '../posts/posts.actions';
 
 import {auth, firebaseSignInGoogle, firebaseSignInFacebook, firestore, loginUser, registerUser, deleteUserAccount} from '../../firebase/firebase';
 import firebase from '../../firebase/firebase';
 
-export function* followUser({payload: {userId, userDisplayName, currentUserId, currentUserDisplayName}}) {
-    const userToFollowRef = yield firestore.doc(`users/${userId}`);
-    const currentUserRef = yield firestore.doc(`users/${currentUserId}`);
-    yield userToFollowRef.update({
-        followers: firebase.firestore.FieldValue.arrayUnion(currentUserDisplayName)
-    });
-    yield currentUserRef.update({
-        following: firebase.firestore.FieldValue.arrayUnion(userDisplayName)
-    });
-    yield put(fetchUsersStart());
+export function* followUser({payload: {profileId, profileDisplayName, currentUserId, currentUserDisplayName}}) {
+    try {
+        const userToFollowRef = yield firestore.doc(`users/${profileId}`);
+        const currentUserRef = yield firestore.doc(`users/${currentUserId}`);
+        yield userToFollowRef.update({
+            followers: firebase.firestore.FieldValue.arrayUnion(currentUserDisplayName)
+        });
+        yield currentUserRef.update({
+            following: firebase.firestore.FieldValue.arrayUnion(profileDisplayName)
+        });
+        yield put(followUserSuccess(profileDisplayName));
+    } catch (e) {
+        yield put(followUserFailure(e));
+    }
 }
 
-export function* unfollowUser({payload: {userId, userDisplayName, currentUserId, currentUserDisplayName}}) {
-    const userToUnfollowRef = yield firestore.doc(`users/${userId}`);
-    const currentUserRef = yield firestore.doc(`users/${currentUserId}`);
-    yield userToUnfollowRef.update({
-        followers: firebase.firestore.FieldValue.arrayRemove(currentUserDisplayName)
-    });
-    yield currentUserRef.update({
-        following: firebase.firestore.FieldValue.arrayRemove(userDisplayName)
-    });
-    yield put(fetchUsersStart());
+export function* unfollowUser({payload: {profileId, profileDisplayName, currentUserId, currentUserDisplayName}}) {
+    try {
+        const userToUnfollowRef = yield firestore.doc(`users/${profileId}`);
+        const currentUserRef = yield firestore.doc(`users/${currentUserId}`);
+        yield userToUnfollowRef.update({
+            followers: firebase.firestore.FieldValue.arrayRemove(currentUserDisplayName)
+        });
+        yield currentUserRef.update({
+            following: firebase.firestore.FieldValue.arrayRemove(profileDisplayName)
+        });
+        yield put(unfollowUserSuccess(profileDisplayName));
+    } catch (e) {
+        yield put(unfollowUserFailure(e));
+    }
 }
 
 export function* getSnapshotFromUser(userAuth) {
@@ -38,6 +45,7 @@ export function* getSnapshotFromUser(userAuth) {
         const userRef = yield call(loginUser, userAuth);
         const userSnapshot = yield userRef.get();
         yield put(signInSuccess({id: userSnapshot.id, ...userSnapshot.data()}));
+        yield put(fetchPostsStart());
     } catch (e) {
         yield put(signInFailure(e));
     }
@@ -82,8 +90,8 @@ export function* signOut() {
 
 export function* signUp({payload: {displayName, email, password}}) {
     try {
-        const users = yield firestore.collection('users');
-        const usersSnapshot = yield users.get();
+        const usersRef = yield firestore.collection('users');
+        const usersSnapshot = yield usersRef.get();
         const userExists = yield usersSnapshot.docs.find(doc => doc.data().displayName === displayName);
         if(userExists) {
             throw new Error('This DisplayName is already taken');
@@ -132,11 +140,11 @@ export function* onUserDeleteStart() {
 }
 
 export function* onUserFollow() {
-    yield takeLatest(UserActionTypes.FOLLOW_USER, followUser);
+    yield takeLatest(UserActionTypes.FOLLOW_USER_START, followUser);
 }
 
 export function* onUserUnfollow() {
-    yield takeLatest(UserActionTypes.UNFOLLOW_USER, unfollowUser);
+    yield takeLatest(UserActionTypes.UNFOLLOW_USER_START, unfollowUser);
 }
 
 export function* userSagas() {

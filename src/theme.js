@@ -37,10 +37,10 @@ const theme = createMuiTheme({
         letterSpacing: "0.4px",
       },
       body2: {
+        fontSize: "0.8rem",
         fontWeight: "500",
-        color: "#333333",
-        letterSpacing: "0.4px",
-        marginLeft: "10px"
+        marginTop: "2px",
+        marginLeft: "12px"
       }
   }
 });

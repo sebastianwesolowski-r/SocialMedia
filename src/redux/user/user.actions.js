@@ -55,12 +55,32 @@ export const deleteUserStart = userData => ({
     payload: userData
 });
 
-export const followUser = followData => ({
-    type: UserActionTypes.FOLLOW_USER,
+export const followUserStart = followData => ({
+    type: UserActionTypes.FOLLOW_USER_START,
     payload: followData
 });
 
-export const unfollowUser = followData => ({
-    type: UserActionTypes.UNFOLLOW_USER,
+export const followUserSuccess = followedUserDisplayName => ({
+    type: UserActionTypes.FOLLOW_USER_SUCCESS,
+    payload: followedUserDisplayName
+});
+
+export const followUserFailure = error => ({
+    type: UserActionTypes.FOLLOW_USER_FAILURE,
+    payload: error
+});
+
+export const unfollowUserStart = followData => ({
+    type: UserActionTypes.UNFOLLOW_USER_START,
     payload: followData
+});
+
+export const unfollowUserSuccess = followedUserDisplayName => ({
+    type: UserActionTypes.UNFOLLOW_USER_SUCCESS,
+    payload: followedUserDisplayName
+});
+
+export const unfollowUserFailure = error => ({
+    type: UserActionTypes.UNFOLLOW_USER_FAILURE,
+    payload: error
 });

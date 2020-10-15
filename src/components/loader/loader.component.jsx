@@ -1,11 +1,23 @@
 import React from 'react';
 
 import {Backdrop, CircularProgress} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 
-const Loader = ({backdropOpen}) => (
-    <Backdrop style={{zIndex: "10"}} open={backdropOpen}>
-        <CircularProgress color="primary" />
-    </Backdrop>
-);
+const useStyles = makeStyles({
+    backdrop: {
+        zIndex: "10",
+        backgroundColor: "rgba(0, 0, 0, 0.25)"
+    }
+});
+
+const Loader = ({backdropOpen}) => {
+    const classes = useStyles();
+
+    return (
+        <Backdrop classes={{root: classes.backdrop}} open={backdropOpen}>
+            <CircularProgress size={80} color="primary" />
+        </Backdrop>
+    );
+}
 
 export default Loader;

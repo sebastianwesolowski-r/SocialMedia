@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 
 import {Box, Typography, Button} from '@material-ui/core';
 
@@ -12,4 +13,4 @@ const NotFound = ({history}) => (
     </Box>
 );
 
-export default NotFound;
+export default withRouter(NotFound);

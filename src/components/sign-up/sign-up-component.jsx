@@ -22,7 +22,7 @@ const useStyles = makeStyles({
         paddingTop: "30px"
     },
     signBtn: {
-        width: "95px",
+        width: "100px",
         height: "35px"
     },
     signCheckbox: {

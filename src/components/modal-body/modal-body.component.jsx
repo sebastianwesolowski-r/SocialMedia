@@ -1,10 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
-import {ReactComponent as Send} from '../../assets/send.svg';
+import {ReactComponent as UploadIcon} from '../../assets/upload-comment.svg';
 
 import {Typography, List, ListItem, ListItemAvatar, ListItemText, Paper, Button, InputBase, Zoom} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
+
+import {commentPost} from '../../redux/posts/posts.actions';
 
 const useStyles  = makeStyles(theme => ({
     root: {
@@ -21,6 +24,7 @@ const useStyles  = makeStyles(theme => ({
         alignItems: "center",
         justifyContent: "center",
         width: "400px",
+        minHeight: "50px",
         height: "50px",
         color: theme.palette.grey[50],
         backgroundColor: props => props.warning ? theme.palette.error.dark : theme.palette.primary.main,
@@ -72,8 +76,21 @@ const useStyles  = makeStyles(theme => ({
     }
 }));
 
-const ModalBody = ({type, content, zoomin, handleModalClose}) => {
+const ModalBody = ({type, content, zoomin, currentUserName, postId, handleModalClose, commentPost}) => {
     const classes = useStyles();
+
+    const [comment, setComment] = useState('');
+
+    const handleCommentChange = e => {
+        setComment(e.target.value);
+    };
+
+    const handleCommentPost = e => {
+        e.preventDefault();
+        commentPost({postId, currentUserName, comment});
+        handleModalClose();
+    }
+
     const renderSwitch = type => {
         switch(type) {
             case 'Likes':
@@ -107,9 +124,9 @@ const ModalBody = ({type, content, zoomin, handleModalClose}) => {
                             ))
                         }
                     </List>
-                    <Paper component="form" className={classes.uploadComment}>
-                        <InputBase className={classes.uploadCommentInput} placeholder="Write a comment..."/>
-                        <Button className={classes.uploadCommentBtn} variant="contained" color="primary" type="submit"><Send /></Button>
+                    <Paper component="form" onSubmit={handleCommentPost} className={classes.uploadComment}>
+                        <InputBase className={classes.uploadCommentInput} value={comment} onChange={handleCommentChange} placeholder="Write a comment..." required/>
+                        <Button className={classes.uploadCommentBtn} variant="contained" color="primary" type="submit"><UploadIcon /></Button>
                     </Paper>
                 </div>
             );
@@ -126,4 +143,8 @@ const ModalBody = ({type, content, zoomin, handleModalClose}) => {
     );
 };
 
-export default ModalBody;
+const mapDispatchToProps = dispatch => ({
+    commentPost: commentData => dispatch(commentPost(commentData))
+})
+
+export default connect(null, mapDispatchToProps)(ModalBody);
