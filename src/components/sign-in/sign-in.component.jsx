@@ -5,6 +5,8 @@ import {createStructuredSelector} from 'reselect';
 import {ReactComponent as Enter} from '../../assets/enter.svg';
 import {ReactComponent as FbLogin} from '../../assets/fb-login.svg';
 import {ReactComponent as GoogleLogin} from '../../assets/google-login.svg';
+import {ReactComponent as PasswordVisible} from '../../assets/password-visible.svg';
+import {ReactComponent as PasswordNotVisible} from '../../assets/password-not-visible.svg';
 
 import {Box, Typography, Button, FormControlLabel, Checkbox} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
@@ -21,7 +23,7 @@ const useStyles = makeStyles({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        paddingTop: "50px",
+        paddingTop: "60px",
         marginBottom: "30px"
     },
     signBtn: {
@@ -45,6 +47,16 @@ const useStyles = makeStyles({
         color: "#333333",
         marginTop: "45px",
         fontWeight: "500"
+    },
+    passwordIcon: {
+        position: "absolute",
+        top: "17%",
+        right: "3%",
+        cursor: "pointer",
+        transitionDuration: "150ms",
+        "&:active": {
+            transform: "scale(1.4)"
+        }
     }
 });
 
@@ -53,6 +65,9 @@ const SignIn = ({doesUserHaveAnAccount, googleSignInStart, facebookSignInStart, 
     const [userData, setUserData] = useState({email: '', password: ''});
     const {email, password} = userData;
     const [rmChecked, setRmChecked] = useState(false);
+    const [passwordShown, setPasswordShown] = useState(false);
+
+    const togglePasswordVisiblity = () => setPasswordShown(!passwordShown);
 
     useEffect(() => {
         if(localStorage.smrememberMe) {
@@ -95,7 +110,10 @@ const SignIn = ({doesUserHaveAnAccount, googleSignInStart, facebookSignInStart, 
                 <Box display="flex" alignItems="center" justifyContent="center" width="460px" height="60px" borderRadius="5px 5px 0 0" bgcolor="primary.main"><Typography variant="h5">Sign in</Typography></Box>
                 <form className={classes.panelForm} onSubmit={handleSubmit}>
                     <FormInput name="email" type="email" label="Email" value={email} onChange={handleChange} required/>
-                    <FormInput name="password" type="password" label="Password" value={password} onChange={handleChange} required/>
+                    <Box width="100%" position="relative">
+                        <FormInput name="password" type={passwordShown ? 'text' : 'password'} label="Password" value={password} onChange={handleChange} required/>
+                        <i className={classes.passwordIcon} onClick={() => togglePasswordVisiblity()}>{passwordShown ? <PasswordVisible /> : <PasswordNotVisible />}</i>
+                    </Box>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between" width="100%">
                         <FormControlLabel control={
                             <Checkbox color="primary" checked={rmChecked} onChange={() => setRmChecked(!rmChecked)}/>

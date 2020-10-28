@@ -1,16 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
 import {ReactComponent as UploadIcon} from '../../assets/upload-comment.svg';
 
-import {Typography, List, ListItem, ListItemAvatar, ListItemText, Paper, Button, InputBase, Zoom} from '@material-ui/core';
+import {Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, Paper, Button, InputBase, Zoom} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
+import FormInput from '../form-input/form-input.component';
+
+import {changeUserPassword, getUserAvatar} from '../../firebase/firebase';
+
+import {deleteUserStart} from '../../redux/user/user.actions';
 import {commentPost} from '../../redux/posts/posts.actions';
 
 const useStyles  = makeStyles(theme => ({
-    root: {
+    mainBody: {
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
@@ -23,12 +28,12 @@ const useStyles  = makeStyles(theme => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "400px",
+        width: "100%",
         minHeight: "50px",
         height: "50px",
         color: theme.palette.grey[50],
         backgroundColor: props => props.warning ? theme.palette.error.dark : theme.palette.primary.main,
-        borderRadius: "5px 5px 0 0",
+        borderRadius: "5px 5px 0 0"
     },
     list: {
         width: "100%",
@@ -73,23 +78,66 @@ const useStyles  = makeStyles(theme => ({
         width: "40px",
         height: "30px",
         margin: theme.spacing(0, 2)
+    },
+    confirmBtn: {
+        width: "120px",
+        height: "35px"
     }
 }));
 
-const ModalBody = ({type, content, zoomin, currentUserName, postId, handleModalClose, commentPost}) => {
+const ModalBody = ({type, content, zoomin, currentUserName, currentUserId, postId, handleModalClose, commentPost, deleteUserAccount}) => {
     const classes = useStyles();
 
+    const [avatars, setAvatars] = useState([]);
     const [comment, setComment] = useState('');
+    const [deleteAccountPassword, setDeleteAccountPassword] = useState("");
+    const [passwordData, setPasswordData] = useState({currentPassword: "", newPassword: "", confirmNewPassword: "" });
+    const {currentPassword, newPassword, confirmNewPassword} = passwordData;
 
     const handleCommentChange = e => {
         setComment(e.target.value);
+    };
+
+    const handlePasswordChange = e => {
+        const {name, value} = e.target;
+        setPasswordData({...passwordData, [name]: value});
     };
 
     const handleCommentPost = e => {
         e.preventDefault();
         commentPost({postId, currentUserName, comment});
         handleModalClose();
-    }
+    };
+
+    const handlePasswordSet = e => {
+        e.preventDefault();
+        if(newPassword !== confirmNewPassword) {
+            return console.log("Passwords didn't match");
+        }
+        changeUserPassword(currentPassword, newPassword);
+        handleModalClose();
+    };
+
+    const deleteAccount = e => {
+        e.preventDefault();
+        deleteUserAccount({deleteAccountPassword, currentUserName, currentUserId});
+        handleModalClose();
+    };
+
+    useEffect(() => {
+        if(type === "Likes" || "Followers" || "Following" || "comments") {
+            const getAvatars = async () => {
+                const fetchAvatars = content.map(item => {
+                    const avatar = (type === 'comments' ? getUserAvatar(item.commentedBy) : getUserAvatar(item));
+                    return avatar;
+                });
+
+                const retrievedAvatars = await Promise.all(fetchAvatars);
+                setAvatars(retrievedAvatars);
+            }
+            getAvatars();
+        }
+    }, [])
 
     const renderSwitch = type => {
         switch(type) {
@@ -97,13 +145,15 @@ const ModalBody = ({type, content, zoomin, currentUserName, postId, handleModalC
             case 'Followers':
             case 'Following':
                 return (
-                    <div className={classes.root}>
+                    <div className={classes.mainBody}>
                         <div className={classes.header}><Typography variant="h6">{type}</Typography></div>
                         <List className={classes.list}>
                             {
-                                content.map(item => (
+                                content.map((item, index) => (
                                     <ListItem key={item}>
-                                        <ListItemAvatar><div /></ListItemAvatar>
+                                        <ListItemAvatar>
+                                            <Avatar src={avatars[index]}/>
+                                        </ListItemAvatar>
                                         <ListItemText primary={<Link className={classes.link} to={`/profile/${item}`} onClick={handleModalClose}>{item}</Link>}/>
                                     </ListItem>
                                 ))
@@ -112,16 +162,19 @@ const ModalBody = ({type, content, zoomin, currentUserName, postId, handleModalC
                     </div>
                 );
             case 'comments': return (
-                <div className={classes.root}>
+                <div className={classes.mainBody}>
                     <div className={classes.header}><Typography variant="h6">Comments</Typography></div>
                     <List className={classes.list}>
                         {
-                            content.map(item => (
-                                <ListItem key={`${item.commentedBy}${item.commentContent}`}>
-                                    <ListItemAvatar><div /></ListItemAvatar>
-                                    <ListItemText primary={<Link className={classes.link} to={`/profile/${item.commentedBy}`} onClick={handleModalClose}>{item.commentedBy}</Link>} secondary={item.commentContent} />
-                                </ListItem>
-                            ))
+                            content.map((item, index) => (
+                                    <ListItem key={`${item.commentedBy}${item.commentContent}`}>
+                                        <ListItemAvatar>
+                                            <Avatar src={avatars[index]} />
+                                        </ListItemAvatar>
+                                        <ListItemText primary={<Link className={classes.link} to={`/profile/${item.commentedBy}`} onClick={handleModalClose}>{item.commentedBy}</Link>} secondary={item.commentContent} />
+                                    </ListItem>
+                                )
+                            )
                         }
                     </List>
                     <Paper component="form" onSubmit={handleCommentPost} className={classes.uploadComment}>
@@ -129,6 +182,27 @@ const ModalBody = ({type, content, zoomin, currentUserName, postId, handleModalC
                         <Button className={classes.uploadCommentBtn} variant="contained" color="primary" type="submit"><UploadIcon /></Button>
                     </Paper>
                 </div>
+            );
+            case 'change-password': return (
+                <Box className={classes.mainBody} height="375px !important">
+                    <div className={classes.header}><Typography variant="h6">Change Password</Typography></div>
+                    <Box component="form" onSubmit={handlePasswordSet} display="flex" flexDirection="column" alignItems="center" width="100%" padding="0 50px" paddingTop="25px">
+                        <FormInput name="currentPassword" type="password" label="Current Password" value={currentPassword} onChange={handlePasswordChange} smallMargin required/>
+                        <FormInput name="newPassword" type="password" label="New Password" value={newPassword} onChange={handlePasswordChange} smallMargin required/>
+                        <FormInput name="confirmNewPassword" type="password" label="Confirm Password" value={confirmNewPassword} onChange={handlePasswordChange} required/>
+                        <Button className={classes.confirmBtn} variant="contained" color="primary" type="submit">Confirm</Button>
+                    </Box>
+                </Box>
+            );
+            case 'delete-account': return (
+                <Box className={classes.mainBody} height="320px !important">
+                    <Box className={classes.header} bgcolor="#f44336 !important"><Typography variant="h6">Delete Account</Typography></Box>
+                    <Box component="form" onSubmit={deleteAccount} display="flex" flexDirection="column" alignItems="center" width="100%" padding="0 35px" paddingTop="25px">
+                        <Typography variant="body1" style={{textAlign: "center", marginBottom: "30px"}}>All your posts and data will be permanently erased. Are you sure you want to delete your account ?</Typography>
+                        <FormInput type="password" label="Current Password" value={deleteAccountPassword} onChange={e => setDeleteAccountPassword(e.target.value)} smallMargin required/>
+                        <Button className={classes.confirmBtn} style={{marginTop: "15px", backgroundColor: "#f44336", color: "#FFFFFF"}} variant="contained" type="submit">Confirm</Button>
+                    </Box>
+                </Box>
             );
             default: return;
         }
@@ -144,7 +218,8 @@ const ModalBody = ({type, content, zoomin, currentUserName, postId, handleModalC
 };
 
 const mapDispatchToProps = dispatch => ({
-    commentPost: commentData => dispatch(commentPost(commentData))
-})
+    commentPost: commentData => dispatch(commentPost(commentData)),
+    deleteUserAccount: userData => dispatch(deleteUserStart(userData))
+});
 
 export default connect(null, mapDispatchToProps)(ModalBody);

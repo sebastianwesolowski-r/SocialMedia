@@ -12,17 +12,7 @@ export const selectUsersPosts = createSelector(
     posts => posts.posts
 );
 
-export const selectPostById = postId => createSelector(
-    [selectUsersPosts],
-    posts => posts[postId]
-);
-
-export const selectPostLikes = postId => createSelector(
-    [selectUsersPosts],
-    posts => posts[postId].likes
-);
-
-export const selectPostComments = postId => createSelector(
-    [selectUsersPosts],
-    posts => posts[postId].comments
+export const selectPostsNotifications = createSelector(
+    [selectPosts],
+    posts => posts.notification
 );

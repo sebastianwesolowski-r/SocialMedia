@@ -52,3 +52,8 @@ export const deletePost = postId => ({
     type: PostsActionTypes.DELETE_POST,
     payload: postId
 });
+
+export const updateNotification = notificationData => ({
+    type: PostsActionTypes.UPDATE_NOTIFICATION,
+    payload: notificationData
+});

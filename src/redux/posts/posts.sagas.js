@@ -5,7 +5,7 @@ import PostsActionTypes from './posts.types';
 import {storage, firestore, convertPostsSnapshotToArray, createPost} from '../../firebase/firebase';
 import firebase from '../../firebase/firebase';
 
-import {fetchPostsStart, fetchPostsSuccess, fetchPostsFailure, uploadPostSuccess, uploadPostFailure, updatePost} from './posts.actions';
+import {fetchPostsSuccess, fetchPostsFailure, uploadPostSuccess, uploadPostFailure, updatePost, updateNotification} from './posts.actions';
 
 import {selectCurrentUserFollowing} from '../user/user.selectors';
 
@@ -44,40 +44,59 @@ export function* uploadPost({payload: {postMessage, currentUserName, postImage}}
 }
 
 export function* likePost({payload: {currentUserName, id}}) {
-    const postToLikeRef = yield firestore.doc(`posts/${id}`);
-    yield postToLikeRef.update({
-        likes: firebase.firestore.FieldValue.arrayUnion(currentUserName)
-    });
-    yield updatePostState(id);
+    try {
+        const postToLikeRef = yield firestore.doc(`posts/${id}`);
+        yield postToLikeRef.update({
+            likes: firebase.firestore.FieldValue.arrayUnion(currentUserName)
+        });
+        yield updatePostState(id);
+    } catch (error) {
+        yield put(updateNotification({message: "There was a problem fulfilling this request", type: "error"}));
+    }
 }
 
 export function* dislikePost({payload: {currentUserName, id}}) {
-    const postToDislikeRef = yield firestore.doc(`posts/${id}`);
-    yield postToDislikeRef.update({
-        likes: firebase.firestore.FieldValue.arrayRemove(currentUserName)
-    });
-    yield updatePostState(id);
+    try {
+        const postToDislikeRef = yield firestore.doc(`posts/${id}`);
+        yield postToDislikeRef.update({
+            likes: firebase.firestore.FieldValue.arrayRemove(currentUserName)
+        });
+        yield updatePostState(id);
+    } catch(error) {
+        yield put(updateNotification({message: "There was a problem fulfilling this request", type: "error"}));
+    }
 }
 
 export function* commentPost({payload: {postId, currentUserName, comment}}) {
-    const postToCommentRef = yield firestore.doc(`posts/${postId}`);
-    yield postToCommentRef.update({
-        comments: firebase.firestore.FieldValue.arrayUnion({commentedBy: currentUserName, commentContent: comment})
-    });
-    yield updatePostState(postId);
+    try {
+        const postToCommentRef = yield firestore.doc(`posts/${postId}`);
+        yield postToCommentRef.update({
+            comments: firebase.firestore.FieldValue.arrayUnion({commentedBy: currentUserName, commentContent: comment})
+        });
+        yield updatePostState(postId);
+    } catch (error) {
+        yield put(updateNotification({message: "There was a problem fulfilling this request", type: "error"}));
+    }
 }
 
 export function* updatePostState(postId) {
-    const postToUpdateRef = yield firestore.doc(`posts/${postId}`);
-    const postSnapshot = yield postToUpdateRef.get();
-    const postData = yield postSnapshot.data();
-    yield postData.id = postId;
-    yield put(updatePost(postData));
+    try {
+        const postToUpdateRef = yield firestore.doc(`posts/${postId}`);
+        const postSnapshot = yield postToUpdateRef.get();
+        const postData = yield postSnapshot.data();
+        yield postData.id = postId;
+        yield put(updatePost(postData));
+    } catch(error) {
+        yield put(updateNotification({message: "There was a problem fulfilling this request", type: "error"}));
+    }
 }
 
-export function* deletePost({payload: postId}) {
-    yield firestore.doc(`posts/${postId}`).delete();
-    yield put(fetchPostsStart());
+export function* deletePost({payload}) {
+    try {
+        yield firestore.doc(`posts/${payload}`).delete();
+    } catch (e) {
+        yield put(updateNotification({message: "There was a problem fulfilling this request", type: "error"}));
+    }
 }
 
 export function* fecthPostsAfertSignIn() {

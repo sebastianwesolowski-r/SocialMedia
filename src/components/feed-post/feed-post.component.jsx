@@ -1,22 +1,26 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
+import {createStructuredSelector} from 'reselect';
 
 import {ReactComponent as Like} from '../../assets/like.svg';
 import {ReactComponent as Liked} from '../../assets/liked.svg';
 import {ReactComponent as Comments} from '../../assets/comments.svg';
 
-import {Card, CardHeader, CardMedia, CardContent, CardActions, Typography, IconButton, Menu, MenuItem, Modal} from '@material-ui/core';
+import {Card, CardHeader, CardMedia, CardContent, CardActions, Typography, IconButton, Menu, MenuItem, Modal, Avatar} from '@material-ui/core';
 import {MoreVert} from '@material-ui/icons';
 import {makeStyles} from '@material-ui/core/styles';
 
 import ModalBody from '../modal-body/modal-body.component';
 
+import {getUserAvatar} from '../../firebase/firebase';
+
 import {selectCurrentUserName} from '../../redux/user/user.selectors';
-import {likePost, dislikePost} from '../../redux/posts/posts.actions';
+import {likePost, dislikePost, deletePost} from '../../redux/posts/posts.actions';
 
 const useStyles = makeStyles(theme => ({
-    root: {
+    card: {
         width: "90%",
         maxWidth: "614px",
         height: "605px",
@@ -58,9 +62,10 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const FeedPost = ({post, currentUserName, likePost, dislikePost}) => {
+const FeedPost = ({history, post, currentUserName, likePost, dislikePost, deletePost}) => {
     const classes = useStyles();
     const {id, uploadedBy, createdAt, image, message, likes, comments} = post;
+    const [postAuthorAvatar, setPostAuthorAvatar] = useState('');
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalType, setModalType] = useState('');
@@ -77,18 +82,42 @@ const FeedPost = ({post, currentUserName, likePost, dislikePost}) => {
         handleMenuClose();
     };
 
+    const handlePostDelete = () => {
+        deletePost(id);
+        history.push(`/profile/${currentUserName}`);
+    }
+
+    const handleModalChange = (type, content) => {
+        setModalType(type);
+        setModalContent(content);
+        handleModalOpen();
+    };
+
+    useEffect(() => {
+        const getPostCreaterAvatar = async () => {
+            const avatar = await getUserAvatar(uploadedBy);
+            setPostAuthorAvatar(avatar);
+        }
+        getPostCreaterAvatar();
+    }, []);
+
     return (
         <>
-            <Card className={classes.root}>
+            <Card className={classes.card}>
                 <CardHeader
                     classes={{title: classes.headerTitle, subheader: classes.headerSubtitle}}
-                    avatar={<div />}
+                    avatar={<Avatar src={postAuthorAvatar}/>}
                     action={<IconButton onClick={handleMenuClick}><MoreVert/></IconButton>}
                     title={<Link className={classes.headerLink} to={`/profile/${uploadedBy}`}>{uploadedBy}</Link>}
                     subheader={new Date(createdAt.seconds * 1000).toLocaleDateString()}
                 />
                 <Menu anchorEl={menuAnchor} getContentAnchorEl={null} anchorOrigin={{vertical: "top", horizontal: "right"}} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
                     <MenuItem classes={{root: classes.menuItem}} onClick={copyPostLink}>Copy Link</MenuItem>
+                    {
+                        currentUserName === uploadedBy ? (
+                            <MenuItem onClick={handlePostDelete}>Delete Post</MenuItem>
+                        ) : null
+                    }
                 </Menu>
                 <CardMedia className={classes.media} image={image} />
                 <CardContent>
@@ -107,10 +136,10 @@ const FeedPost = ({post, currentUserName, likePost, dislikePost}) => {
                                 </IconButton>
                             )
                         }
-                        <Typography style={{cursor: "pointer", color: "#333333", fontSize: "1.2rem"}} variant="body1" onClick={() => {setModalType('Likes'); setModalContent(likes); handleModalOpen();}}>{likes.length}</Typography>
+                        <Typography style={{cursor: "pointer", color: "#333333", fontSize: "1.2rem"}} variant="body1" onClick={() => handleModalChange("Likes", likes)}>{likes.length}</Typography>
                     </div>
                     <div className={classes.stat}>
-                        <IconButton onClick={() => {setModalType('comments'); setModalContent(comments); handleModalOpen();}}>
+                        <IconButton onClick={() => handleModalChange("comments", comments)}>
                             <Comments />
                         </IconButton>
                         <Typography style={{color: "#333333", fontSize: "1.2rem"}} variant="body1">{comments.length}</Typography>
@@ -126,13 +155,14 @@ const FeedPost = ({post, currentUserName, likePost, dislikePost}) => {
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-    currentUserName: selectCurrentUserName(state)
+const mapStateToProps = createStructuredSelector({
+    currentUserName: selectCurrentUserName
 });
 
 const mapDispatchToProps = dispatch => ({
     likePost: likeData => dispatch(likePost(likeData)),
-    dislikePost: dislikeData => dispatch(dislikePost(dislikeData))
+    dislikePost: dislikeData => dispatch(dislikePost(dislikeData)),
+    deletePost: id => dispatch(deletePost(id))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedPost);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(FeedPost));

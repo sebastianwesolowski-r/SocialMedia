@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 
 import {ReactComponent as Enter} from '../../assets/enter.svg';
+import {ReactComponent as PasswordVisible} from '../../assets/password-visible.svg';
+import {ReactComponent as PasswordNotVisible} from '../../assets/password-not-visible.svg';
 
 import {Box, Typography, Button, FormControlLabel, Checkbox} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
@@ -19,7 +21,7 @@ const useStyles = makeStyles({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        paddingTop: "30px"
+        paddingTop: "40px"
     },
     signBtn: {
         width: "100px",
@@ -34,6 +36,16 @@ const useStyles = makeStyles({
         color: "#333333",
         marginTop: "45px",
         fontWeight: "500"
+    },
+    passwordIcon: {
+        position: "absolute",
+        top: "17%",
+        right: "3%",
+        cursor: "pointer",
+        transitionDuration: "150ms",
+        "&:active": {
+            transform: "scale(1.4)"
+        }
     }
 });
 
@@ -42,6 +54,9 @@ const SignUp = ({doesUserHaveAnAccount, signUpStart, isProcessing}) => {
     const [userData, setUserData] = useState({displayName: '', email: '', password: '', confirmPassword: ''});
     const {displayName ,email, password, confirmPassword} = userData;
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [passwordShown, setPasswordShown] = useState(false);
+
+    const togglePasswordVisiblity = () => setPasswordShown(!passwordShown);
 
     const handleChange = event => {
         const {value, name} = event.target;
@@ -68,8 +83,11 @@ const SignUp = ({doesUserHaveAnAccount, signUpStart, isProcessing}) => {
                 <form className={classes.panelForm} onSubmit={handleSubmit}>
                     <FormInput name="displayName" type="text" label="Display Name" value={displayName} onChange={handleChange} smallMargin required/>
                     <FormInput name="email" type="email" label="Email" value={email} onChange={handleChange} smallMargin required/>
-                    <FormInput name="password" type="password" label="Password" value={password} onChange={handleChange} smallMargin required/>
-                    <FormInput name="confirmPassword" type="password" label="Confirm Password" value={confirmPassword} onChange={handleChange} smallMargin required/>
+                    <Box width="100%" position="relative">
+                        <FormInput name="password" type={passwordShown ? 'text' : 'password'} label="Password" value={password} onChange={handleChange} smallMargin required/>
+                        <i className={classes.passwordIcon} onClick={() => togglePasswordVisiblity()}>{passwordShown ? <PasswordVisible /> : <PasswordNotVisible />}</i>
+                    </Box>
+                    <FormInput name="confirmPassword" type={passwordShown ? 'text' : 'password'} label="Confirm Password" value={confirmPassword} onChange={handleChange} smallMargin required/>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between" width="100%">
                             <FormControlLabel control={
                                 <Checkbox color="primary" value={termsAccepted} onChange={() => setTermsAccepted(!termsAccepted)}/>

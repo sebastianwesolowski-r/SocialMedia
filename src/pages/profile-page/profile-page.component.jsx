@@ -86,6 +86,13 @@ const ProfilePage = ({match, history, currentUser, followUser, unfollowUser}) =>
     const handleModalOpen = () => setModalOpen(true);
     const handleModalClose = () => setModalOpen(false);
 
+    const handleModalChange = (type, content, menuClose) => {
+        setModalType(type);
+        setModalContent(content);
+        handleModalOpen();
+        if (menuClose) handleMenuClose();
+    };
+
     return (
         <>
             {
@@ -101,11 +108,11 @@ const ProfilePage = ({match, history, currentUser, followUser, unfollowUser}) =>
                                             <Typography className={classes.panelNumber} variant="body1" color="primary">{profileData.posts.length}</Typography>
                                             <Typography variant="subtitle2" style={{color: "#777777"}}>Posts</Typography>
                                         </div>
-                                        <div className={classes.profilePanel} onClick={() => {setModalType('Followers'); setModalContent(profileData.followers); handleModalOpen();}}>
+                                        <div className={classes.profilePanel} onClick={() => handleModalChange("Followers", profileData.followers)}>
                                             <Typography className={classes.panelNumber} variant="body1" color="primary">{profileData.followers.length}</Typography>
                                             <Typography variant="subtitle2" style={{color: "#777777"}}>Followers</Typography>
                                         </div>
-                                        <div className={classes.profilePanel} onClick={() => {setModalType('Following'); setModalContent(profileData.following); handleModalOpen();}}>
+                                        <div className={classes.profilePanel} onClick={() => handleModalChange("Following", profileData.following)}>
                                             <Typography className={classes.panelNumber} variant="body1" color="primary">{profileData.following.length}</Typography>
                                             <Typography variant="subtitle2" style={{color: "#777777"}}>Following</Typography>
                                         </div>
@@ -137,13 +144,13 @@ const ProfilePage = ({match, history, currentUser, followUser, unfollowUser}) =>
                                 </Grid>
                             </Box>
                         </Box>
-                        <Menu anchorEl={menuAnchor} anchorOrigin={{vertical: "center", horizontal: "right"}} transformOrigin={{vertical: "top", horizontal: "left"}} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
-                            <MenuItem classes={{root: classes.menuItem}}>Change Password</MenuItem>
-                            <MenuItem classes={{root: classes.menuItem}}>Delete Account</MenuItem>
+                        <Menu anchorEl={menuAnchor} getContentAnchorEl={null} anchorOrigin={{vertical: "center", horizontal: "right"}} transformOrigin={{vertical: "top", horizontal: "left"}} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
+                            <MenuItem classes={{root: classes.menuItem}} onClick={() => handleModalChange("change-password", null, 1)}>Change Password</MenuItem>
+                            <MenuItem classes={{root: classes.menuItem}} onClick={() => handleModalChange("delete-account", null, 1)}>Delete Account</MenuItem>
                         </Menu>
                         <Modal className={classes.modal} open={modalOpen} onClose={handleModalClose}>
                             <div style={{outline: "none"}}>
-                                <ModalBody zoomin={modalOpen} type={modalType} content={modalContent} handleModalClose={handleModalClose} />
+                                <ModalBody zoomin={modalOpen} type={modalType} content={modalContent} currentUserName={currentUser.displayName} currentUserId={currentUser.id} handleModalClose={handleModalClose} />
                             </div>
                         </Modal>
                     </Box>

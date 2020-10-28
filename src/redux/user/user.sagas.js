@@ -2,7 +2,7 @@ import {takeLatest, put, all, call} from 'redux-saga/effects';
 
 import UserActionTypes from './user.types';
 
-import {signInSuccess, signInFailure, signOutStart, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, followUserSuccess, followUserFailure, unfollowUserSuccess, unfollowUserFailure} from './user.actions';
+import {signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, followUserSuccess, followUserFailure, unfollowUserSuccess, unfollowUserFailure, deleteUserSuccess, deleteUserFailure} from './user.actions';
 import {fetchPostsStart} from '../posts/posts.actions';
 
 import {auth, firebaseSignInGoogle, firebaseSignInFacebook, firestore, loginUser, registerUser, deleteUserAccount} from '../../firebase/firebase';
@@ -75,7 +75,6 @@ export function* signInWithEmail({payload: {email, password}}) {
         yield getSnapshotFromUser(user);
     } catch(error) {
         yield put(signInFailure(error));
-        yield alert(error.message);
     }
 }
 
@@ -101,17 +100,22 @@ export function* signUp({payload: {displayName, email, password}}) {
         yield put(signUpSuccess());
     } catch (error) {
         yield put(signUpFailure(error));
-        yield alert(error.message);
     }
 }
 
-export function* deleteUser({payload: {presentPassword, currentUserId}}) {
+export function* deleteUser({payload: {deleteAccountPassword, currentUserName, currentUserId}}) {
     try {
-        yield call(deleteUserAccount, presentPassword);
+        yield call(deleteUserAccount, deleteAccountPassword);
         yield firestore.doc(`users/${currentUserId}`).delete();
-        yield put(signOutStart());
+        const userPosts = yield firestore.collection("posts").where("uploadedBy", "==", currentUserName);
+        yield userPosts.get().then(snapshot => {
+            snapshot.forEach(doc => {
+                doc.ref.delete();
+            });
+        });
+        yield put(deleteUserSuccess());
     } catch(error) {
-        alert(error.message);
+        yield put(deleteUserFailure(error));
     }
 }
 

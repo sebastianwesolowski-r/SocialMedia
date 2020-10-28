@@ -18,7 +18,7 @@ import {signOutStart} from '../../redux/user/user.actions';
 import {searchUserProfile} from '../../firebase/firebase';
 
 const useStyles = makeStyles(theme => ({
-    root: {
+    appBar: {
         alignItems: "center",
         justifyContent: "center",
         height: "55px",
@@ -97,18 +97,21 @@ const Header = ({currentUserName, signOut, history}) => {
         setSearchValue(e.target.value);
     };
 
+    const foundUserCb = (user, error) => {
+        if(error) {
+            return setSearchResult(error);
+        }
+        setSearchResult(user);
+    }
+
     const handleSubmit = async e => {
         e.preventDefault();
-        const result = await searchUserProfile(searchValue);
-        if(result.error) {
-            return setSearchResult(result.error);
-        }
-        setSearchResult(result);
+        await searchUserProfile(searchValue, foundUserCb);
     };
 
     return (
         <>
-            <AppBar ref={appBarRef} position="fixed" className={classes.root}>
+            <AppBar ref={appBarRef} position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.bar}>
                     <Box style={{cursor: "pointer"}} display="flex" flex="1" alignItems="center" justifyContent="center" width="195px" height="100%" marginRight="auto" onClick={() => history.push("/feed")}>
                         <AppLogoSmall style={{marginRight: "25px"}}/>
@@ -141,8 +144,16 @@ const Header = ({currentUserName, signOut, history}) => {
             </AppBar>
             <Popover anchorEl={appBarRef.current} open={Boolean(searchResult)} onClose={handlePopoverClose} anchorOrigin={{vertical: 'bottom', horizontal: 'center'}} transformOrigin={{vertical: 'top', horizontal: 'center'}}>
                 <Box display="flex" alignItems="center" justifyContent="center" width="250px" padding="12px 0">
-                    <Avatar className={classes.popoverAvatar} src={searchResult ? searchResult.avatar : null} />
-                    <Link className={classes.popoverLink} to={`/profile/${searchResult ? searchResult.displayName : null}`}>{searchResult ? searchResult.displayName : null}</Link>
+                    {
+                        typeof(searchResult) === "object" ? (
+                            <>
+                                <Avatar className={classes.popoverAvatar} src={searchResult ? searchResult.avatar : null} />
+                                <Link className={classes.popoverLink} to={`/profile/${searchResult ? searchResult.displayName : null}`}>{searchResult ? searchResult.displayName : null}</Link>
+                            </>
+                           ) : (
+                                <Typography variant="body1">{searchResult ? searchResult : null}</Typography>
+                           )
+                    }
                 </Box>
             </Popover>
         </>

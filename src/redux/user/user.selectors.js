@@ -12,11 +12,6 @@ export const selectCurrentUserName = createSelector(
     user => user.displayName
 );
 
-export const selectCurrentUserId = createSelector(
-    [selectCurrentUser],
-    user => user.id
-);
-
 export const selectCurrentUserFollowing = createSelector(
     [selectCurrentUser],
     user => user.following
@@ -30,4 +25,9 @@ export const selectIsProcessing = createSelector(
 export const selectAccess = createSelector(
     [selectUser],
     user => user.access
+);
+
+export const selectUserNotifications = createSelector(
+    [selectUser],
+    user => user.notification
 );

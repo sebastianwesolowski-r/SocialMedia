@@ -18,7 +18,7 @@ const PostPage = ({match}) => {
             return setPost(fetchedPost);
         };
         fetchPost();
-    });
+    }, [match]);
 
     return (
         <>

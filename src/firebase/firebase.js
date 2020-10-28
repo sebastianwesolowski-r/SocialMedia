@@ -61,18 +61,18 @@ export const registerUser = async(userAuth, additionalData) => {
     }
 };
 
-export const searchUserProfile = async (userName) => {
+export const searchUserProfile = async (userName, foundUserCb) => {
     try {
         const searchedUserSnapshot = await usersRef.where("displayName", "==", userName).get();
 
         if(searchedUserSnapshot.empty) {
-            return {error: "No results found"}
+            return foundUserCb(null, "User not found");
         }
 
         const {avatar, displayName} = searchedUserSnapshot.docs[0].data();
-        return {avatar, displayName};
+        return foundUserCb({avatar, displayName});
     } catch (error) {
-        return {error}
+        return foundUserCb(null, "There was a problem fulfilling this request");
     }
 }
 
@@ -90,6 +90,13 @@ export const fetchUserProfile = async (userName) => {
         return {error};
     }
 };
+
+export const getUserAvatar = async (userName) => {
+    const userProfileSnapshot = await usersRef.where("displayName", "==", userName).get();
+    const userData = userProfileSnapshot.docs[0].data();
+    const {avatar} = userData;
+    return avatar;
+}
 
 export const changeUserPassword = (presentPassword, newPassword) => {
     const user = firebase.auth().currentUser;
@@ -123,7 +130,7 @@ export const getPostById = async postId => {
     try {
         const postSnapshot = await firestore.doc(`posts/${postId}`).get();
         const postData = postSnapshot.data();
-        return postData;
+        return {id: postId, ...postData};
     } catch (e) {
         return e;
     }

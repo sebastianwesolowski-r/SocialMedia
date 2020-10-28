@@ -55,6 +55,15 @@ export const deleteUserStart = userData => ({
     payload: userData
 });
 
+export const deleteUserSuccess = () => ({
+    type: UserActionTypes.DELETE_USER_SUCCESS
+});
+
+export const deleteUserFailure = error => ({
+    type: UserActionTypes.DELETE_USER_FAILURE,
+    payload: error
+});
+
 export const followUserStart = followData => ({
     type: UserActionTypes.FOLLOW_USER_START,
     payload: followData
