@@ -46,6 +46,7 @@ const useStyles = makeStyles({
         textAlign: "center",
         color: "#333333",
         marginTop: "45px",
+        marginBottom: "20px",
         fontWeight: "500"
     },
     passwordIcon: {
@@ -106,8 +107,8 @@ const SignIn = ({doesUserHaveAnAccount, googleSignInStart, facebookSignInStart, 
 
     return (
         <>
-            <Box display="flex" flexDirection="column" alignItems="center" width="460px" height="500px" borderRadius="5px" boxShadow={7} marginTop="50px" padding="0 50px">
-                <Box display="flex" alignItems="center" justifyContent="center" width="460px" height="60px" borderRadius="5px 5px 0 0" bgcolor="primary.main"><Typography variant="h5">Sign in</Typography></Box>
+            <Box display="flex" flexDirection="column" alignItems="center" width="95%" maxWidth="460px" height="500px" borderRadius="5px" boxShadow={7} marginTop="50px" padding="0 50px">
+                <Box display="flex" alignItems="center" justifyContent="center" width="calc(100% + 100px)" height="60px" borderRadius="5px 5px 0 0" bgcolor="primary.main"><Typography variant="h5">Sign in</Typography></Box>
                 <form className={classes.panelForm} onSubmit={handleSubmit}>
                     <FormInput name="email" type="email" label="Email" value={email} onChange={handleChange} required/>
                     <Box width="100%" position="relative">

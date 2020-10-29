@@ -28,7 +28,6 @@ const App = ({access}) => (
       ) : null
     }
     <SnackbarHandler />
-    <Footer />
     <Switch>
       <UnauthenticatedRoute
         exact path="/"

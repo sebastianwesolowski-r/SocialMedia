@@ -14,11 +14,23 @@ import {selectCurrentUser} from '../../redux/user/user.selectors';
 
 import {fetchUserProfile} from '../../firebase/firebase';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles( theme => ({
+    userPanel: {
+        padding: "0 30px",
+        [theme.breakpoints.down('md')]: {
+            padding: "0 10px"
+        }
+    },
     avatar: {
         width: "85px",
         height: "85px",
-        marginRight: "32px"
+        marginRight: "32px",
+        [theme.breakpoints.down('md')]: {
+            marginRight: "12px"
+        }
+    },
+    profileUserName: {
+        fontSize: "1.2rem"
     },
     profilePanel: {
         display: "flex",
@@ -26,7 +38,10 @@ const useStyles = makeStyles({
         alignItems: "flex-start",
         justifyContent: "space-between",
         height: "100%",
-        cursor: "pointer"
+        cursor: "pointer",
+        [theme.breakpoints.down('md')]: {
+            marginRight: "5px"
+        }
     },
     panelNumber: {
         fontSize: "1.2rem"
@@ -53,8 +68,13 @@ const useStyles = makeStyles({
     menuItem: {
         fontSize: "0.9rem",
         padding: "7px 25px"
+    },
+    postsGrid: {
+        [theme.breakpoints.down('md')]: {
+            justifyContent: "center"
+        }
     }
-});
+}));
 
 const ProfilePage = ({match, history, currentUser, followUser, unfollowUser}) => {
     const classes = useStyles();
@@ -98,11 +118,11 @@ const ProfilePage = ({match, history, currentUser, followUser, unfollowUser}) =>
             {
                 profileData ? (
                     <Box width="100%" height="100%" display="flex" flexDirection="column" alignItems="center" paddingTop="130px">
-                        <Box display="flex" flexDirection="column" alignItems="center" width="770px" height="100%">
-                            <Box display="flex" alignItems="flex-start" width="100%" height="110px" padding="0 30px" border={1} borderLeft={0} borderTop={0} borderRight={0} borderColor="secondary.main">
+                        <Box display="flex" flexDirection="column" alignItems="center" width="95%" maxWidth="770px" height="100%">
+                            <Box className={classes.userPanel} display="flex" alignItems="flex-start" width="100%" height="110px" border={1} borderLeft={0} borderTop={0} borderRight={0} borderColor="secondary.main">
                                 <Avatar className={classes.avatar} src={profileData.avatar}></Avatar>
-                                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="space-between" width="50%" height="100%" paddingTop="5px" paddingBottom="20px">
-                                    <Typography variant="h6" style={{color: "#333333"}}>{profileData.displayName}</Typography>
+                                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="space-between" width="55%" height="100%" paddingBottom="20px">
+                                    <Typography className={classes.profileUserName} variant="h6" style={{color: "#333333"}}>{profileData.displayName}</Typography>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" height="40px">
                                         <div className={classes.profilePanel}>
                                             <Typography className={classes.panelNumber} variant="body1" color="primary">{profileData.posts.length}</Typography>
@@ -132,11 +152,11 @@ const ProfilePage = ({match, history, currentUser, followUser, unfollowUser}) =>
                                     )
                                 }
                             </Box>
-                            <Box width="100%" padding="15px 10px">
-                                <Grid container spacing={2}>
+                            <Box width="100%" paddingTop="15px">
+                                <Grid className={classes.postsGrid} container spacing={1}>
                                 {
                                     profileData.posts.map(post => (
-                                        <Grid item xs={4} key={post.id}>
+                                        <Grid item xs={"auto"} xl={3} key={post.id}>
                                             <Box onClick={() => history.push(`/post/${post.id}`)} className={classes.imageBox} style={{backgroundImage: `url(${post.image})`}} width="250px" height="250px" border={1} borderRadius={1} borderColor="secondary.main"/>
                                         </Grid>
                                     ))

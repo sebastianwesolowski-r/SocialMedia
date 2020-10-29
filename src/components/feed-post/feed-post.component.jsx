@@ -21,7 +21,7 @@ import {likePost, dislikePost, deletePost} from '../../redux/posts/posts.actions
 
 const useStyles = makeStyles(theme => ({
     card: {
-        width: "90%",
+        width: "95%",
         maxWidth: "614px",
         height: "605px",
         minHeight: "605px",

@@ -72,7 +72,7 @@ const AddPost = ({currentUserName, uploadPostStart, isUploading}) => {
     };
 
     return (
-        <Box width="620px" height="100px" marginBottom="45px" padding="10px" paddingBottom="7px" bgcolor="common.white" border={1} borderColor="secondary.main" borderRadius={1}>
+        <Box width="95%" maxWidth="620px" height="100px" marginBottom="25px" padding="10px" paddingBottom="7px" bgcolor="common.white" border={1} borderColor="secondary.main" borderRadius={1}>
             <form className={classes.form} onSubmit={handleSubmit}>
                 <InputBase type="text" className={classes.textfield} value={postMessage} onChange={handleMessageChange} placeholder={`What are your thoughts, ${currentUserName}?`} required/>
                 <div>

@@ -24,7 +24,7 @@ const PostPage = ({match}) => {
         <>
             {
                 post ? (
-                    <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="100%">
+                    <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="100%" marginTop="20px">
                         <FeedPost post={post}/>
                     </Box>
                 ) : <Loader backdropOpen={!Boolean(post)}/>
